@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=enge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
+
+    <style>
+      body {
+        margin: 0;
+        background-color: rgb(228, 228, 228);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #canvas {
+        background-color: rgb(0, 0, 0);
+      }
+
+      #bluePoints {
+        position: fixed;
+        width: 250px;
+        top: -25px;
+        left: 400px;
+        font-size: 2.75em;
+        color: #0000ff;
+      }
+
+      #redPoints {
+        position: fixed;
+        width: 250px;
+        top: -25px;
+        left: 1120px;
+        font-size: 2.75em;
+        color: #ff0000;
+      }
+    </style>
+  </head>
+
+  <body>
+    <audio id='music'src="./images/hello.mp3" autoplay></audio>
+    <audio id='background'src="./images/background.mp3"></audio>
+    <audio id="explosion" src="./images/piu.mp3"></audio>
+    <audio id="piu" src="./images/piu.mp3"></audio>
+    <h1 id="bluePoints" class="outBlue">0</h1>
+    <h1 id="redPoints" class="outRed">0</h1>
+    <canvas id="canvas" width="1500" height="700"></canvas>
+    <script type="module" src="code.js"></script>
+  </body>
+</html>
