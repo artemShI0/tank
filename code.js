@@ -86,13 +86,15 @@ hello.onended = function () {
 background.onended = function () {
   background.play();
 };
+background.onpause = function () {
+  background.play();
+};
 
 ///setmap1(map.walls_goriz, map.walls_vert, brick_white);
 setbullet(tank1, bullet);
 setbullet(tank2, bullet);
 
 setmap(map.walls_goriz, map.walls_vert, brick_white, file_map);
-
 //########################################################################################################
 
 function render() {
