@@ -52,6 +52,7 @@ import {
   setmap,
   move_box,
   touch_box,
+  visualwalls
 } from "./functions.js";
 
 //#######################################################################################################
@@ -94,7 +95,7 @@ background.onpause = function () {
 setbullet(tank1, bullet);
 setbullet(tank2, bullet);
 
-setmap(map.walls_goriz, map.walls_vert, brick_white, file_map);
+setmap(map, brick_white, file_map);
 //########################################################################################################
 
 function render() {
@@ -106,7 +107,7 @@ function render() {
   ////      drawRect(rect);
   //    drawPoint(point);
   //    drawOut(out);
-  drawwalls(map.walls_goriz, map.walls_vert);
+  visualwalls(map);
   ctx.drawImage(tank1.image, tank1.x, tank1.y, tank1.width, tank1.height);
   ctx.drawImage(tank2.image, tank2.x, tank2.y, tank2.width, tank2.height);
 

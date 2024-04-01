@@ -31,30 +31,20 @@ export function drawCage(cage) {
 
 export function touch(map, tankA, tankB, box){
     let pink = 0;
-    for(let i = 0; i < map.walls_goriz.length; ++i){
-        for(let j = 0; j < map.walls_goriz[i].length; ++j){
-            if(tankA.x + tankA.width > map.walls_goriz[i][j].x && tankA.x < map.walls_goriz[i][j].x + map.walls_goriz[i][j].dx && 
-                tankA.y + tankA.height > map.walls_goriz[i][j].y && tankA.y < map.walls_goriz[i][j].y + map.walls_goriz[i][j].dy){
-                    if(tankA && map.walls_goriz[i][j].status != 3 && map.walls_goriz[i][j].main == false){
-                        map.walls_goriz[i][j].image = map.walls_goriz[i][j].crush[map.walls_goriz[i][j].status];
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(map.wall[i][j].is){
+                if(tankA.x + tankA.width > map.wall[i][j].x && tankA.x < map.wall[i][j].x + map.wall[i][j].dx && 
+                    tankA.y + tankA.height > map.wall[i][j].y && tankA.y < map.wall[i][j].y + map.wall[i][j].dy){
+                    if(tankA && map.wall[i][j].status != 3 && map.wall[i][j].main == false){
+                        map.wall[i][j].image = map.wall[i][j].crush[map.wall[i][j].status];
                     }
-                    if(map.walls_goriz[i][j].status != 3){
+                    if(map.wall[i][j].status != 3){
                         pink = 1;
+                        console.log(pink)
                     }
                 }
-        }
-    }
-    for(let i = 0; i < map.walls_vert.length; ++i){
-        for(let j = 0; j < map.walls_vert[i].length; ++j){
-            if(tankA.x + tankA.width > map.walls_vert[i][j].x && tankA.x < map.walls_vert[i][j].x + map.walls_vert[i][j].dx && 
-                tankA.y + tankA.height > map.walls_vert[i][j].y && tankA.y < map.walls_vert[i][j].y + map.walls_vert[i][j].dy){
-                    if(tankA.costume_i == 0 && map.walls_vert[i][j].status != 3 && map.walls_vert[i][j].main == false){ 
-                        map.walls_vert[i][j].image = map.walls_vert[i][j].crush[map.walls_vert[i][j].status];
-                    }
-                    if(map.walls_vert[i][j].status != 3){
-                        pink = 1;
-                    }
-                }
+            }
         }
     }
     if(tankA.x + tankA.height > tankB.x && tankA.x < tankB.x + tankB.width && tankA.y + tankA.height> tankB.y && tankA.y < tankB.y + tankB.height){pink = 2}
@@ -64,32 +54,20 @@ export function touch(map, tankA, tankB, box){
 export function touch_bullet(map, tankB, bullet, box){
     let pink = {};
     pink.touch = 0;
-    for(let i = 0; i < map.walls_goriz.length; ++i){
-        for(let j = 0; j < map.walls_goriz[i].length; ++j){
-            if(bullet.x + bullet.width > map.walls_goriz[i][j].x && bullet.x < map.walls_goriz[i][j].x + map.walls_goriz[i][j].dx && 
-                bullet.y + bullet.height > map.walls_goriz[i][j].y && bullet.y < map.walls_goriz[i][j].y + map.walls_goriz[i][j].dy){
-                    if(map.walls_goriz[i][j].status != 3){
-                        pink.touch = true;
-                    }
-                    if(bullet.costume_i == 0 && map.walls_goriz[i][j].status != 3 && map.walls_goriz[i][j].main == false){
-                        map.walls_goriz[i][j].status++;
-                        map.walls_goriz[i][j].image = map.walls_goriz[i][j].crush[map.walls_goriz[i][j].status];
-                    }
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(map.wall[i][j].is){
+                if(bullet.x + bullet.width > map.wall[i][j].x && bullet.x < map.wall[i][j].x + map.wall[i][j].dx && 
+                    bullet.y + bullet.height > map.wall[i][j].y && bullet.y < map.wall[i][j].y + map.wall[i][j].dy){
+                        if(map.wall[i][j].status != 3){
+                            pink.touch = true;
+                        }
+                        if(bullet.costume_i == 0 && map.wall[i][j].status != 3 && map.wall[i][j].main == false){
+                            map.wall[i][j].status++;
+                            map.wall[i][j].image = map.wall[i][j].crush[map.wall[i][j].status];
+                        }
                 }
-        }
-    }
-    for(let i = 0; i < map.walls_vert.length; ++i){
-        for(let j = 0; j < map.walls_vert[i].length; ++j){
-            if(bullet.x + bullet.width > map.walls_vert[i][j].x && bullet.x < map.walls_vert[i][j].x + map.walls_vert[i][j].dx && 
-                bullet.y + bullet.height > map.walls_vert[i][j].y && bullet.y < map.walls_vert[i][j].y + map.walls_vert[i][j].dy){
-                    if(map.walls_vert[i][j].status != 3){
-                        pink.touch = true;
-                    }
-                    if(bullet.costume_i == 0 && map.walls_vert[i][j].status != 3 && map.walls_vert[i][j].main == false){
-                        map.walls_vert[i][j].status++;
-                        map.walls_vert[i][j].image = map.walls_vert[i][j].crush[map.walls_vert[i][j].status];
-                    }
-                }
+            }
         }
     }
     if(bullet.x + bullet.width > tankB.x && bullet.x < tankB.x + tankB.width && bullet.y + bullet.height> tankB.y && bullet.y < tankB.y + tankB.height){pink.touch = true; pink.what = tankB.name}
@@ -105,26 +83,17 @@ export function touch_bullet(map, tankB, bullet, box){
 export function touch_box(box, map){
     let pink = {};
     pink.touch = 0;
-    for(let i = 0; i < map.walls_goriz.length; ++i){
-        for(let j = 0; j < map.walls_goriz[i].length; ++j){
-            if(box.x + box.width > map.walls_goriz[i][j].x && box.x < map.walls_goriz[i][j].x + map.walls_goriz[i][j].dx && 
-                box.y + box.height > map.walls_goriz[i][j].y && box.y < map.walls_goriz[i][j].y + map.walls_goriz[i][j].dy){
-                    if(map.walls_goriz[i][j].status != 3){
-                        pink.touch = 1;
-                        pink.wall = 1
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(map.wall[i][j].is){
+                if(box.x + box.width > map.wall[i][j].x && box.x < map.wall[i][j].x + map.wall[i][j].dx && 
+                    box.y + box.height > map.wall[i][j].y && box.y < map.wall[i][j].y + map.wall[i][j].dy){
+                        if(map.wall[i][j].status != 3){
+                            pink.touch = 1;
+                            pink.wall = 1
+                        }
                     }
-                }
-        }
-    }
-    for(let i = 0; i < map.walls_vert.length; ++i){
-        for(let j = 0; j < map.walls_vert[i].length; ++j){
-            if(box.x + box.width > map.walls_vert[i][j].x && box.x < map.walls_vert[i][j].x + map.walls_vert[i][j].dx && 
-                box.y + box.height > map.walls_vert[i][j].y && box.y < map.walls_vert[i][j].y + map.walls_vert[i][j].dy){
-                    if(map.walls_vert[i][j].status != 3){
-                        pink.touch = 1;
-                        pink.wall = 2;
-                    }
-                }
+            }
         }
     }
     return pink;
@@ -247,25 +216,6 @@ export function to_file(map){
 }
 
 
-function reset_map(map, box, time){
-    for(let i = 0; i < map.walls_goriz.length; ++i){
-        for(let j = 0; j < map.walls_goriz[i].length; ++j){
-            map.walls_goriz[i][j].status = 0;
-            map.walls_goriz[i][j].image = map.walls_goriz[i][j].crush[map.walls_goriz[i][j].status];
-        }
-    }
-    for(let i = 0; i < map.walls_vert.length; ++i){
-        for(let j = 0; j < map.walls_vert[i].length; ++j){
-            map.walls_vert[i][j].status = 0;
-            map.walls_vert[i][j].image = map.walls_vert[i][j].crush[map.walls_vert[i][j].status];
-        }
-    }
-    box.own = 0;
-    box.see = false;
-    box.width = box.width_b;
-    box.height = box.height_b;
-    box.image = box.image_b;
-}
 
 
 
@@ -311,8 +261,6 @@ export function read(text){
 }
 
 
-
-
 function setwall_goriz(brick_white, x, y, times){
     let wall_goriz = [];
 //    x += 100;
@@ -333,6 +281,7 @@ function setwall_goriz(brick_white, x, y, times){
         wall_goriz[i].crush = [brick_white.white, brick_white.crush1, brick_white.crush2, brick_white.crush3];
         wall_goriz[i].status = 0;
         wall_goriz[i].main = false;
+        wall_goriz[i].is = true;
     }
     return wall_goriz;
 }
@@ -362,35 +311,6 @@ function setwall_vert(brick_white, x, y, times){
 }
 
 
-
-export function setmap(walls_goriz, walls_vert, brick_white, text){
-walls_goriz[0] = setwall_goriz(brick_white, 105, 55, 25);
-walls_vert[0] = setwall_vert(brick_white, 105, 55, 12);
-walls_vert[1] = setwall_vert(brick_white, 1355, 55, 12);
-walls_goriz[1] = setwall_goriz(brick_white, 105, 605, 25);
-    for(let i = 0; i < walls_goriz[0].length; ++i){
-        walls_goriz[0][i].main = true;
-        walls_goriz[1][i].main = true;
-    }
-    for(let i = 0; i < walls_vert[0].length; ++i){
-        walls_vert[0][i].main = true;
-        walls_vert[1][i].main = true;
-    }
-    let walls = read(text);
-    for(let i = 0; i < walls[0].length; ++i){
-        walls_goriz[2 + i] = setwall_goriz(brick_white, walls[0][i][0], walls[0][i][1], walls[0][i][2]);
-    }
-    for(let i = 0; i < walls[1].length; ++i){
-        walls_vert[2 + i] = setwall_vert(brick_white, walls[1][i][0], walls[1][i][1], walls[1][i][2]);
-    }
-
-    walls_goriz[0][1].image = walls_goriz[0][1].blue;
-    walls_goriz[0][2].image = walls_goriz[0][2].blue;
-    walls_goriz[0][3].image = walls_goriz[0][3].blue;
-    walls_goriz[0][22].image = walls_goriz[0][22].red;
-    walls_goriz[0][23].image = walls_goriz[0][23].red;
-    walls_goriz[0][24].image = walls_goriz[0][24].red;
-}
 
 export function setmap1(walls_goriz, walls_vert, brick_white){
     walls_goriz[0] = setwall_goriz(brick_white, 5, 5, 1290 - 1);
@@ -476,7 +396,138 @@ export function drawwalls(walls_goriz, walls_vert){
 
 //###########################################################################################################################################
 //###########################################################################################################################################
+//###########################################################################################################################################
+//###########################################################################################################################################
 
+
+
+export function input(map){
+    let text = ''; 
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(map.wall[i][j].use || (i == 0 || j == 0 || i == map.wall.length - 1 || j == map.wall[i].length - 1)){
+                text += '1';
+            } else {
+                text += '0';
+            }  
+        }
+        text += '\r';
+        text += '\n';
+    }
+    text += "end;";
+    return text;
+}
+
+
+
+function read_matrix(text){
+    let matrix = []
+    let line = 0;
+    let column = 0;
+    for(let i = 0; text[i] == '0' || text[i] == '1' || text[i] == '\n' || text[i] == '\r'; ++i){
+        let arr = []
+        for(let j = 0; text[i] != '\r' && text[i] != '\n'; ++i, ++j){
+            arr[j] = Number(text[i]);
+        }
+        i++;
+        matrix.push(arr);
+    }
+    return matrix
+}
+
+
+function setbrick(i, j, brick_white){
+    let x0 = 105;
+    let y0 = 55;
+    let brick = {}
+    brick.x = x0 + j * brick_white.width;               
+    brick.y = y0 + i * brick_white.height;
+    brick.width = brick_white.width;
+    brick.height = brick_white.height;
+    brick.dx = brick_white.width;
+    brick.dy = brick_white.height;
+    brick.image = brick_white.white;
+    brick.white = brick_white.white;
+    brick.dark = brick_white.dark;
+    brick.blue = brick_white.blue;
+    brick.red = brick_white.red;
+    brick.crush = [brick_white.white, brick_white.crush1, brick_white.crush2, brick_white.crush3];
+    brick.status = 0;
+    brick.main = false;
+    brick.is = true;
+    return brick;
+}
+
+
+export function setmap(map, brick_white, text){
+    for(let i = 0; i < 12; ++i){
+        map.wall[i] = [];
+        for(let j = 0; j < 26; ++j){
+            map.wall[i][j] = setbrick(i, j, brick_white);
+        }
+    }
+    for(let i = 0; i < map.wall.length; ++i){
+        map.wall[i][0].main = true;
+        map.wall[i][map.wall[i].length - 1].main = true;
+    }
+    for(let i = 0; i < map.wall[0].length; ++i){
+        map.wall[0][i].main = true;
+        map.wall[map.wall.length - 1][i].main = true;
+    }
+    let walls = read_matrix(text);
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(walls[i][j] == 0){
+                map.wall[i][j].is = false;
+            }
+        }
+    }
+    map.wall[0][1].image = map.wall[0][1].blue;
+    map.wall[0][2].image = map.wall[0][2].blue;
+    map.wall[0][3].image = map.wall[0][3].blue;
+    map.wall[0][22].image = map.wall[0][22].red;
+    map.wall[0][23].image = map.wall[0][23].red;
+    map.wall[0][24].image = map.wall[0][24].red;
+    console.log(map)
+}
+
+export function setmap4(map, brick_white, text){
+    for(let i = 0; i < 12; ++i){
+        map.wall[i] = [];
+        for(let j = 0; j < 26; ++j){
+            map.wall[i][j] = setbrick(i, j, brick_white);
+        }
+    }
+    for(let i = 0; i < map.wall.length; ++i){
+        map.wall[i][0].main = true;
+        map.wall[i][map.wall[i].length - 1].main = true;
+    }
+    for(let i = 0; i < map.wall[0].length; ++i){
+        map.wall[0][i].main = true;
+        map.wall[map.wall.length - 1][i].main = true;
+    }
+    let walls = read_matrix(text);
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(walls[i][j] == 0){
+                map.wall[i][j].is = false;
+            }
+        }
+    }
+}
+export function visualwalls(map){
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(map.wall[i][j].is){
+                ctx.drawImage(map.wall[i][j].image, map.wall[i][j].x, map.wall[i][j].y, map.wall[i][j].width, map.wall[i][j].height);
+            }
+        }
+    }
+}
+//###########################################################################################################################################
+//###########################################################################################################################################
+//###########################################################################################################################################
+//###########################################################################################################################################
 
 export function appearence1(tank, last){
     if(last == "KeyW"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direct = 0}
@@ -498,6 +549,23 @@ export function appearence2(tank, last){
 
 //###########################################################################################################################################
 //###########################################################################################################################################
+
+function reset_map(map, box, time){
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(map.wall[i][j].is){
+                map.wall[i][j].status = 0;
+                map.wall[i][j].image = map.wall[i][j].crush[map.wall[i][j].status];
+            }
+        }
+    }
+    box.own = 0;
+    box.see = false;
+    box.width = box.width_b;
+    box.height = box.height_b;
+    box.image = box.image_b;
+}
+
 
 export function setbullet(tank, bullet){
     tank.bullets = [];
@@ -536,7 +604,7 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
     bullet.touch = pink.touch;
 
     if(pink.what == 'blue' && bullet.costume_i == 0 && box.own != tankB.numb){
-        map.walls_goriz[0][3 - map.red_i].image = map.walls_goriz[0][3 - map.red_i + 3].white;
+        map.wall[0][3 - map.red_i].image = map.wall[0][3 - map.red_i + 3].white;
         map.red_i++;
         if(map.red_i == 3){
             tankA.x = tankA.sx;
@@ -547,8 +615,8 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
             map.red_i = 0;
             map.blue_i = 0;
             reset_map(map, box, time);
-            for(let i = 0; i < 3; ++i){map.walls_goriz[0][i + 1].image = map.walls_goriz[0][i + 1].blue;}
-            for(let i = 0; i < 3; ++i){map.walls_goriz[0][i + 22].image = map.walls_goriz[0][i + 22].red;}
+            for(let i = 0; i < 3; ++i){map.wall[0][i + 1].image = map.wall[0][i + 1].blue;}
+            for(let i = 0; i < 3; ++i){map.wall[0][i + 22].image = map.wall[0][i + 22].red;}
             winner.who = 'red'
         }
         // ctx.beginPath();
@@ -557,7 +625,7 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
         // ctx.fill();
     }
     if(pink.what == 'red' && bullet.costume_i == 0 && box.own != tankB.numb){
-        map.walls_goriz[0][map.blue_i + 22].image = map.walls_goriz[0][map.blue_i + 22].white;
+        map.wall[0][map.blue_i + 22].image = map.wall[0][map.blue_i + 22].white;
         map.blue_i++;
         if(map.blue_i == 3){
             tankA.x = tankA.sx;
@@ -568,8 +636,8 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
             map.red_i = 0;
             map.blue_i = 0;
             reset_map(map, box, time);
-            for(let i = 0; i < 3; ++i){map.walls_goriz[0][i + 1].image = map.walls_goriz[0][i + 1].blue;}
-            for(let i = 0; i < 3; ++i){map.walls_goriz[0][i + 22].image = map.walls_goriz[0][i + 22].red;}
+            for(let i = 0; i < 3; ++i){map.wall[0][i + 1].image = map.wall[0][i + 1].blue;}
+            for(let i = 0; i < 3; ++i){map.wall[0][i + 22].image = map.wall[0][i + 22].red;}
             winner.who = 'blue'
             box.see = false;
             box.last = time;

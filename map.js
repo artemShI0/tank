@@ -37,9 +37,11 @@ import {
   bulletset,
   bulletgo,
   drawwalls,
+  setmap,
   setmap1,
   setmap2,
   setmap3,
+  setmap4,
   touch,
   setbullet,
   shot,
@@ -47,13 +49,19 @@ import {
   picture_catch,
   read,
   read_line,
-  setmap,
   move_box,
   touch_box,
   to_file,
+  input,
+  visualwalls,
 } from "./functions.js";
 
 //#######################################################################################################
+let shape = '11111111111111111111111111' + '\r' + '\n' + '11111111111111111111111111' + '\r' + '\n' + '11111111111111111111111111' + '\r' + '\n'
+shape += '11111111111111111111111111' + '\r' + '\n' + '11111111111111111111111111' + '\r' + '\n'
+shape += '11111111111111111111111111' + '\r' + '\n' + '11111111111111111111111111' + '\r' + '\n'
+shape += '11111111111111111111111111' + '\r' + '\n' + '11111111111111111111111111' + '\r' + '\n' 
+shape += '11111111111111111111111111' + '\r' + '\n' + '11111111111111111111111111' + '\r' + '\n' + '11111111111111111111111111' + '\r' + '\n' + 'end;'
 
 let text = "";
 let myBrick = Object.assign({}, brick_white);
@@ -61,24 +69,23 @@ myBrick.width /= 2;
 myBrick.height /= 2;
 
 let map = {
-  walls_goriz: [],
-  walls_vert: [],
+  wall: []
 };
 let file_map = "2, 610, 360, 0,\nend;";
 let dt = 300;
 let time0 = 0;
 //setmap(map.walls_goriz, map.walls_vert, brick_white, file_map);
-setmap3(map.walls_goriz, map.walls_vert, myBrick);
+setmap4(map, myBrick, shape);
 
-for (let i = 1; i < map.walls_goriz.length - 1; ++i) {
-  for (let j = 0; j < map.walls_goriz[i].length; ++j) {
-    map.walls_goriz[i][j].use = 0;
-    map.walls_goriz[i][j].image = map.walls_goriz[i][j].dark;
+for (let i = 1; i < map.wall.length - 1; ++i) {
+  for (let j = 1; j < map.wall[i].length - 1; ++j) {
+    map.wall[i][j].use = 0;
+    map.wall[i][j].image = map.wall[i][j].dark;
   }
 }
 
 function generClick() {
-  text = to_file(map);
+  text = input(map);
 }
 
 //########################################################################################################
@@ -86,26 +93,26 @@ function generClick() {
 function render() {
   let time = new Date();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawwalls(map.walls_goriz, map.walls_vert);
+  visualwalls(map);
 
   if (mouse.pressed && time - time0 > dt) {
-    for (let i = 1; i < map.walls_goriz.length - 1; ++i) {
-      for (let j = 0; j < map.walls_goriz[i].length; ++j) {
+    for (let i = 1; i < map.wall.length - 1; ++i) {
+      for (let j = 1; j < map.wall[i].length - 1; ++j) {
         if (
-          mouse.x > map.walls_goriz[i][j].x &&
-          mouse.x < map.walls_goriz[i][j].x + myBrick.width &&
-          mouse.y > map.walls_goriz[i][j].y &&
-          mouse.y < map.walls_goriz[i][j].y + myBrick.width
+          mouse.x > map.wall[i][j].x &&
+          mouse.x < map.wall[i][j].x + myBrick.width &&
+          mouse.y > map.wall[i][j].y &&
+          mouse.y < map.wall[i][j].y + myBrick.width
         ) {
           if (
-            !((i == 5 || i == 6) && (j == 0 || j == 1 || j == 22 || j == 23))
+            !((i == 5 || i == 6) && (j == 0 || j == 1 || j == 23 || j == 24))
           ) {
-            if (map.walls_goriz[i][j].use) {
-              map.walls_goriz[i][j].image = map.walls_goriz[i][j].dark;
-              map.walls_goriz[i][j].use = 0;
+            if (map.wall[i][j].use) {
+              map.wall[i][j].image = map.wall[i][j].dark;
+              map.wall[i][j].use = 0;
             } else {
-              map.walls_goriz[i][j].image = map.walls_goriz[i][j].white;
-              map.walls_goriz[i][j].use = 1;
+              map.wall[i][j].image = map.wall[i][j].white;
+              map.wall[i][j].use = 1;
             }
             time0 = time;
           }

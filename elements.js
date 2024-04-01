@@ -318,8 +318,7 @@ export let box = {
 };
 
 export let map = {
-  walls_goriz: [],
-  walls_vert: [],
+  wall: [],
   blue_i: 0,
   red_i: 0,
   number: 0,
