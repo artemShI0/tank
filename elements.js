@@ -174,6 +174,7 @@ const image14 = new Image();
 const image15 = new Image();
 const image16 = new Image();
 const image17 = new Image();
+const image18 = new Image();
 
 let costumes1 = [new Image(), new Image(), new Image(), new Image()];
 
@@ -217,6 +218,25 @@ export let tank1 = {
 };
 
 export let tank2 = {
+  name: "red",
+  costumes: costumes2,
+  x: 1300,
+  y: 325,
+  sx: 1300,
+  sy: 325,
+  width: 40,
+  height: 40,
+  dx: 5,
+  dy: 5,
+  direction: 3,
+  direct: 1,
+  bullet_max: 4,
+  points: 0,
+  live: 3,
+  numb: 2,
+};
+
+export let bot = {
   name: "red",
   costumes: costumes2,
   x: 1300,
@@ -339,6 +359,7 @@ export let map = {
 
 tank1.image = image1;
 tank2.image = image2;
+bot.image = image2;
 kust.image = image3;
 out.image = image4;
 brick_brown.image = image5;
@@ -356,7 +377,7 @@ map.image2.image = image11;
 box.image = image15;
 box.image_b = image15;
 box.image_sh = image16;
-
+brick_white.red_dark = image18;
 
 
 image7.src = "./trash_img/bullet.png";
@@ -376,7 +397,7 @@ image14.src = "./images/brick_white_3.jpg";
 image15.src = "./images/box.png";
 image16.src = "./images/sheld.png";
 image17.src = "./images/brick_white_dark.png";
-
+image18.src = "./images/brick_red_dark.jpg";
 
 export let wall_goriz = {
   x: 150,

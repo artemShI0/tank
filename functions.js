@@ -27,7 +27,12 @@ export function drawCage(cage) {
 //###########################################################################################################################################
 //###########################################################################################################################################
 
-
+function inside2(obj1, obj2){
+    if(obj1.x + obj1.width/2 >= obj2.x && obj1.x + obj1.width/2 <= obj2.x + obj2.width && obj1.y + obj1.height/2 >= obj2.y && obj1.y + obj1.height/2 <= obj2.y + obj2.height){
+        return true;
+    }
+    return false;
+}
 
 export function touch(map, tankA, tankB, box){
     let pink = 0;
@@ -41,7 +46,6 @@ export function touch(map, tankA, tankB, box){
                     }
                     if(map.wall[i][j].status != 3){
                         pink = 1;
-                        console.log(pink)
                     }
                 }
             }
@@ -144,7 +148,6 @@ export function move2(rect, pressed, brick_white, a, b, c, d) {
         rect.y += rect.dy;
     }
 }
-
 
 
 
@@ -451,6 +454,7 @@ function setbrick(i, j, brick_white){
     brick.dark = brick_white.dark;
     brick.blue = brick_white.blue;
     brick.red = brick_white.red;
+    brick.red_dark = brick_white.red_dark;
     brick.crush = [brick_white.white, brick_white.crush1, brick_white.crush2, brick_white.crush3];
     brick.status = 0;
     brick.main = false;
@@ -488,7 +492,6 @@ export function setmap(map, brick_white, text){
     map.wall[0][22].image = map.wall[0][22].red;
     map.wall[0][23].image = map.wall[0][23].red;
     map.wall[0][24].image = map.wall[0][24].red;
-    console.log(map)
 }
 
 export function setmap4(map, brick_white, text){
@@ -529,22 +532,50 @@ export function visualwalls(map){
 //###########################################################################################################################################
 //###########################################################################################################################################
 
+function centre(bot, brick){
+    if(bot.x > brick.x && bot.x + bot.width < brick.x + brick.width &&
+        bot.y > brick.y && bot.y + bot.height < brick.y + brick.height){
+            return true;
+    }
+    return false;
+}
+
+
+
 export function appearence1(tank, last){
-    if(last == "KeyW"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direct = 0}
-    else if(last == "KeyD"){tank.image = tank.costumes[1]; tank.direction = 1; tank.direct = 1}
-    else if(last == "KeyS"){tank.image = tank.costumes[2]; tank.direction = 2; tank.direct = 2}
-    else if(last == "KeyA"){tank.image = tank.costumes[3]; tank.direction = 3; tank.direct = 3}
+    if(last == "KeyW"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direction = 0}
+    else if(last == "KeyD"){tank.image = tank.costumes[1]; tank.direction = 1; tank.direction = 1}
+    else if(last == "KeyS"){tank.image = tank.costumes[2]; tank.direction = 2; tank.direction = 2}
+    else if(last == "KeyA"){tank.image = tank.costumes[3]; tank.direction = 3; tank.direction = 3}
     else{tank.direction = -1}
 }
 
 export function appearence2(tank, last){
-    if(last == "ArrowUp"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direct = 0}
-    else if(last == "ArrowRight"){tank.image = tank.costumes[1]; tank.direction = 1; tank.direct = 1}
-    else if(last == "ArrowDown"){tank.image = tank.costumes[2]; tank.direction = 2; tank.direct = 2}
-    else if(last == "ArrowLeft"){tank.image = tank.costumes[3]; tank.direction = 3; tank.direct = 3}
+    if(last == "ArrowUp"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direction = 0}
+    else if(last == "ArrowRight"){tank.image = tank.costumes[1]; tank.direction = 1; tank.direction = 1}
+    else if(last == "ArrowDown"){tank.image = tank.costumes[2]; tank.direction = 2; tank.direction = 2}
+    else if(last == "ArrowLeft"){tank.image = tank.costumes[3]; tank.direction = 3; tank.direction = 3}
     else{tank.direction = -1}
 }
 
+export function appearence_bot(bot, bot_way, map){
+    let x1, y1;
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(inside2(bot, map.wall[i][j])){
+                y1 = i;
+                x1 = j;
+            }
+        }
+    }
+    if(bot_way.length > 1){
+        if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direction = 0}
+        else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direction = 1}
+        else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direction = 2}
+        else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direction = 3}
+        else{bot.direction = bot.direction}
+    }
+}
 
 
 //###########################################################################################################################################
@@ -590,7 +621,7 @@ export function setbullet(tank, bullet){
 
 export function bulletset(bullet, tank){
     bullet.see = true;
-    bullet.direction = tank.direct;
+    bullet.direction = tank.direction;
     if(bullet.direction == 0){bullet.image = bullet.costumes[0]; bullet.width = 25; bullet.height = 50;bullet.x = tank.x + 9; bullet.y = tank.y - 15;}
     if(bullet.direction == 1){bullet.image = bullet.costumes[1]; bullet.width = 50; bullet.height = 25;bullet.x = tank.x + 9; bullet.y = tank.y + 10;}
     if(bullet.direction == 2){bullet.image = bullet.costumes[2]; bullet.width = 25; bullet.height = 50;bullet.x = tank.x + 6; bullet.y = tank.y + 10;}
@@ -726,6 +757,35 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
 //###########################################################################################################################################
 //###########################################################################################################################################
 
+
+export function bot_shot(bot_way, tank1, map, tank, time, time0, dt){
+    let button = false;
+    let x1, y1, x2, y2;
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(inside2(tank, map.wall[i][j])){
+                y1 = i;
+                x1 = j;
+            }
+            if(inside2(tank1, map.wall[i][j])){
+                y2 = i;
+                x2 = j;
+            }
+        }
+    }
+    if((x1 == x2 && (tank.direction == 0 || tank.direction == 2)) || (y1 == y2 && (tank.direction == 1 || tank.direction == 3))){
+        button = true;
+    }
+    if(button && !tank.bullets[tank.bullet_i].see && time0 < time - dt){
+        bulletset(tank.bullets[tank.bullet_i], tank);
+        tank.bullet_i++;
+        if(tank.bullet_i == tank.bullet_max){tank.bullet_i = 0}
+        time0 = time
+    }
+    return time0;
+}
+
+
 export function shot(button, tank, time, time0, dt){
     if(button && !tank.bullets[tank.bullet_i].see && time0 < time - dt){
         bulletset(tank.bullets[tank.bullet_i], tank);
@@ -811,5 +871,96 @@ export function move_box(box, time, map, tank1, tank2){
             box.height = box.height_sh;
             box.start = time;
         }
+    }
+}
+
+
+
+//###########################################################################################################################################
+//###########################################################################################################################################
+//###########################################################################################################################################
+//###########################################################################################################################################
+
+function coord(v, m){
+    let pair = []
+    for(let i = 0; i < v.length; ++i){
+        pair[i] = []
+        pair[i].push(Math.floor(v[i] / m));
+        pair[i].push(Math.floor(v[i] % m));
+    }
+    return pair;
+}
+
+function conect(v, i, n, m, map){
+    if(map.wall[Math.floor(i/m)][i%m].is && map.wall[Math.floor(i/m)][i%m].status != 3){
+        return false;
+    }
+    if( Math.abs(Math.floor(v/m) - Math.floor(i/m)) == 0 && Math.abs(v%m - i%m) == 1){
+        return true;
+    }
+    if( Math.abs(Math.floor(v/m) - Math.floor(i/m)) == 1 && Math.abs(v%m - i%m) == 0){
+        return true;
+    }
+    return false;
+}
+
+
+
+function bfs(v, n, m, way, used, dist, q, map){
+    way[v].push(v);
+    q.push(v);
+    dist[v] = 0;
+    used[v] = 1;
+    while(q.length > 0){
+        v = q.shift();
+        for(let i = 0; i < n * m; ++i){
+            if(conect(v, i, n, m, map)){
+                if(!used[i]){
+                    q.push(i);
+                    used[i] = 1;
+                    dist[i] = dist[v] + 1;
+                    for(let j = 0; j < way[v].length; ++j){
+                        way[i].push(way[v][j]);
+                    }
+                    way[i].push(i);
+                }
+            }
+        }
+    }
+}
+
+
+export function findway(tank2, tank1, map){
+    let x1, y1, x2, y2;
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(inside2(tank2, map.wall[i][j])){
+                y1 = i;
+                x1 = j;
+            }
+            if(inside2(tank1, map.wall[i][j])){
+                y2 = i;
+                x2 = j;
+            }
+        }
+    }
+    let way = []
+    let used = []
+    let dist = []
+    let q = []
+    let n = 12
+    let m = 26
+    for(let i = 0; i < n * m; ++i){
+        way[i] = []
+    }
+    bfs(y1 * m + x1, n, m, way, used, dist, q, map);
+    return coord(way[y2 * m + x2], m);
+}
+
+
+export function show_way(coord, map){
+    for(let i = 0; i < coord.length; ++i){
+        let wall = map.wall[coord[i][0]][coord[i][1]]
+        ctx.drawImage(wall.red_dark, wall.x, wall.y, wall.width, wall.height);
     }
 }
