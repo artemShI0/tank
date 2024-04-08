@@ -129,7 +129,7 @@ bot.sy = bot.y;
 
 function render() {
   time = new Date();
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height); 
   
   //    ctx.drawImage(brick_brown.image, 700, 500, brick_brown.width, brick_brown.height);
   //    drawCage(cage);
