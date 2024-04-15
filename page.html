@@ -38,16 +38,25 @@
         font-size: 2.75em;
         color: #ff0000;
       }
+      #start {
+        position: fixed;
+        width: 1000px;
+        top: 250px;
+        left: 300px;
+        font-size: 4em;
+        color: #ff0000;
+      }
     </style>
   </head>
 
   <body>
-    <audio id='music'src="./images/hello.mp3" autoplay></audio>
-    <audio id='background'src="./images/background.mp3"></audio>
+    <audio id='music'src="./images/hello.mp3" ></audio>
+    <audio id='background'src="./images/background.mp3" loop></audio>
     <audio id="explosion" src="./images/piu.mp3"></audio>
     <audio id="piu" src="./images/piu.mp3"></audio>
     <h1 id="bluePoints" class="outBlue">0</h1>
     <h1 id="redPoints" class="outRed">0</h1>
+    <h1 id="start" class="outStart">Нажмите пробел, чтобы начать</h1>
     <canvas id="canvas" width="1500" height="700"></canvas>
     <script type="module" src="code.js"></script>
   </body>

@@ -201,10 +201,10 @@ let costumes4 = [
 export let tank1 = {
   name: "blue",
   costumes: costumes1,
-  x: 170,
-  y: 325,
-  sx: 170,
-  sy: 325,
+  x: 206,
+  y: 306,
+  sx: 206,
+  sy: 306,
   width: 40,
   height: 40,
   dx: 5,
@@ -215,15 +215,17 @@ export let tank1 = {
   points: 0,
   live: 3,
   numb: 1,
+  insy: 5,
+  insx: 3,
 };
 
 export let tank2 = {
   name: "red",
   costumes: costumes2,
-  x: 1300,
-  y: 325,
-  sx: 1300,
-  sy: 325,
+  x: 1256,
+  y: 306,
+  sx: 1256,
+  sy: 306,
   width: 40,
   height: 40,
   dx: 5,
@@ -234,6 +236,8 @@ export let tank2 = {
   points: 0,
   live: 3,
   numb: 2,
+  insy: 5,
+  insx: 23,
 };
 
 export let bot = {
@@ -253,6 +257,8 @@ export let bot = {
   points: 0,
   live: 3,
   numb: 2,
+  insy: 5,
+  insx: 23,
 };
 
 export let kust = {

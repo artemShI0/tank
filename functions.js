@@ -427,13 +427,16 @@ function read_matrix(text){
     let matrix = []
     let line = 0;
     let column = 0;
-    for(let i = 0; text[i] == '0' || text[i] == '1' || text[i] == '\n' || text[i] == '\r'; ++i){
-        let arr = []
-        for(let j = 0; text[i] != '\r' && text[i] != '\n'; ++i, ++j){
-            arr[j] = Number(text[i]);
+    let y = 0;
+    let x = 0;
+    for(let i = 0; i < text.length; ++i){
+        if(text[i] == '0' || text[i] == '1'){
+            let arr = []
+            for(let j = 0; j < 26; ++i, ++j){
+                arr[j] = Number(text[i]);
+            }
+            matrix.push(arr);
         }
-        i++;
-        matrix.push(arr);
     }
     return matrix
 }
@@ -529,7 +532,7 @@ export function visualwalls(map){
 }
 //###########################################################################################################################################
 //###########################################################################################################################################
-//###########################################################################################################################################
+//##################################################################################################################################################
 //###########################################################################################################################################
 
 function centre(bot, brick){
@@ -543,18 +546,18 @@ function centre(bot, brick){
 
 
 export function appearence1(tank, last){
-    if(last == "KeyW"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direction = 0}
-    else if(last == "KeyD"){tank.image = tank.costumes[1]; tank.direction = 1; tank.direction = 1}
-    else if(last == "KeyS"){tank.image = tank.costumes[2]; tank.direction = 2; tank.direction = 2}
-    else if(last == "KeyA"){tank.image = tank.costumes[3]; tank.direction = 3; tank.direction = 3}
+    if(last == "KeyW"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direct = 0}
+    else if(last == "KeyD"){tank.image = tank.costumes[1]; tank.direction = 1; tank.direct = 1}
+    else if(last == "KeyS"){tank.image = tank.costumes[2]; tank.direction = 2; tank.direct = 2}
+    else if(last == "KeyA"){tank.image = tank.costumes[3]; tank.direction = 3; tank.direct = 3}
     else{tank.direction = -1}
 }
 
 export function appearence2(tank, last){
-    if(last == "ArrowUp"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direction = 0}
-    else if(last == "ArrowRight"){tank.image = tank.costumes[1]; tank.direction = 1; tank.direction = 1}
-    else if(last == "ArrowDown"){tank.image = tank.costumes[2]; tank.direction = 2; tank.direction = 2}
-    else if(last == "ArrowLeft"){tank.image = tank.costumes[3]; tank.direction = 3; tank.direction = 3}
+    if(last == "ArrowUp"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direct = 0}
+    else if(last == "ArrowRight"){tank.image = tank.costumes[1]; tank.direction = 1; tank.direct = 1}
+    else if(last == "ArrowDown"){tank.image = tank.costumes[2]; tank.direction = 2; tank.direct = 2}
+    else if(last == "ArrowLeft"){tank.image = tank.costumes[3]; tank.direction = 3; tank.direct = 3}
     else{tank.direction = -1}
 }
 
@@ -569,12 +572,11 @@ export function appearence_bot(bot, bot_way, map){
         }
     }
     if(bot_way.length > 1){
-        if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direction = 0}
-        else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direction = 1}
-        else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direction = 2}
-        else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direction = 3}
-        else{bot.direction = bot.direction}
-    }
+        if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direct = 0}
+        else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direct = 1}
+        else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direct = 2}
+        else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direct = 3}
+    } else {bot.direction = -1}
 }
 
 
@@ -609,6 +611,8 @@ export function setbullet(tank, bullet){
         tank.bullets[i].dy = bullet.dy;
         tank.bullets[i].see = bullet.see;
         tank.bullets[i].costume_i = bullet.costume_i;
+        tank.bullets[i].direction = bullet.direction;
+        tank.bullets[i].image = bullet.image;
     }
 }
 
@@ -619,13 +623,13 @@ export function setbullet(tank, bullet){
 
 
 
-export function bulletset(bullet, tank){
-    bullet.see = true;
-    bullet.direction = tank.direction;
-    if(bullet.direction == 0){bullet.image = bullet.costumes[0]; bullet.width = 25; bullet.height = 50;bullet.x = tank.x + 9; bullet.y = tank.y - 15;}
-    if(bullet.direction == 1){bullet.image = bullet.costumes[1]; bullet.width = 50; bullet.height = 25;bullet.x = tank.x + 9; bullet.y = tank.y + 10;}
-    if(bullet.direction == 2){bullet.image = bullet.costumes[2]; bullet.width = 25; bullet.height = 50;bullet.x = tank.x + 6; bullet.y = tank.y + 10;}
-    if(bullet.direction == 3){bullet.image = bullet.costumes[3]; bullet.width = 50; bullet.height = 25;bullet.x = tank.x - 10; bullet.y = tank.y + 7;}
+export function bulletset(tank){
+    tank.bullets[tank.bullet_i].see = true;
+    tank.bullets[tank.bullet_i].direction = tank.direct;
+    if(tank.bullets[tank.bullet_i].direction == 0){tank.bullets[tank.bullet_i].image = tank.bullets[tank.bullet_i].costumes[0]; tank.bullets[tank.bullet_i].width = 25; tank.bullets[tank.bullet_i].height = 50;tank.bullets[tank.bullet_i].x = tank.x + 9; tank.bullets[tank.bullet_i].y = tank.y - 15;}
+    if(tank.bullets[tank.bullet_i].direction == 1){tank.bullets[tank.bullet_i].image = tank.bullets[tank.bullet_i].costumes[1]; tank.bullets[tank.bullet_i].width = 50; tank.bullets[tank.bullet_i].height = 25;tank.bullets[tank.bullet_i].x = tank.x + 9; tank.bullets[tank.bullet_i].y = tank.y + 10;}
+    if(tank.bullets[tank.bullet_i].direction == 2){tank.bullets[tank.bullet_i].image = tank.bullets[tank.bullet_i].costumes[2]; tank.bullets[tank.bullet_i].width = 25; tank.bullets[tank.bullet_i].height = 50;tank.bullets[tank.bullet_i].x = tank.x + 6; tank.bullets[tank.bullet_i].y = tank.y + 10;}
+    if(tank.bullets[tank.bullet_i].direction == 3){tank.bullets[tank.bullet_i].image = tank.bullets[tank.bullet_i].costumes[3]; tank.bullets[tank.bullet_i].width = 50; tank.bullets[tank.bullet_i].height = 25;tank.bullets[tank.bullet_i].x = tank.x - 10; tank.bullets[tank.bullet_i].y = tank.y + 7;}
 }
 
 
@@ -777,7 +781,7 @@ export function bot_shot(bot_way, tank1, map, tank, time, time0, dt){
         button = true;
     }
     if(button && !tank.bullets[tank.bullet_i].see && time0 < time - dt){
-        bulletset(tank.bullets[tank.bullet_i], tank);
+        bulletset(tank);
         tank.bullet_i++;
         if(tank.bullet_i == tank.bullet_max){tank.bullet_i = 0}
         time0 = time
@@ -788,7 +792,7 @@ export function bot_shot(bot_way, tank1, map, tank, time, time0, dt){
 
 export function shot(button, tank, time, time0, dt){
     if(button && !tank.bullets[tank.bullet_i].see && time0 < time - dt){
-        bulletset(tank.bullets[tank.bullet_i], tank);
+        bulletset(tank);
         tank.bullet_i++;
         if(tank.bullet_i == tank.bullet_max){tank.bullet_i = 0}
         time0 = time
@@ -931,19 +935,20 @@ function bfs(v, n, m, way, used, dist, q, map){
 
 
 export function findway(tank2, tank1, map){
-    let x1, y1, x2, y2;
     for(let i = 0; i < map.wall.length; ++i){
         for(let j = 0; j < map.wall[i].length; ++j){
             if(inside2(tank2, map.wall[i][j])){
-                y1 = i;
-                x1 = j;
+                tank2.insy = i;
+                tank2.insx = j;
             }
             if(inside2(tank1, map.wall[i][j])){
-                y2 = i;
-                x2 = j;
+                tank1.insy = i;
+                tank1.insx = j;
             }
         }
     }
+    let x1 = tank2.insx, y1 = tank2.insy;
+    let x2 = tank1.insx, y2 = tank1.insy;
     let way = []
     let used = []
     let dist = []
