@@ -56,6 +56,11 @@
         top: 400px;
         left: 450px;
       }
+      #use_bot {
+        position: fixed;
+        top: 450px;
+        left: 450px;
+      }
       #map_input {
         position: fixed;
         top: 500px;
@@ -78,10 +83,6 @@
 
   <body id="all">
     <pre
-      id="map_input"
-      style="font-size: 1.2em; font-weight: bold; color: #ffffff"
-    > Выберете карту <input type="file" name="f" id="map" /> </pre>
-    <pre
       id="SpeedT"
       style="font-size: 1.2em; font-weight: bold; color: #ffffff"
     > Скорость танков <input  type="number" class="Tspeed" /> </pre>
@@ -97,6 +98,14 @@
       id="arsenal"
       style="font-size: 1.2em; font-weight: bold; color: #ffffff"
     > Арсенал <input  type="number" class="ars" /> </pre>
+    <pre
+      id="use_bot"
+      style="font-size: 1.2em; font-weight: bold; color: #ffffff"
+    ><input type="checkbox" name="for" id="bot" class="ub"/>Играть с ботом</pre>
+    <pre
+      id="map_input"
+      style="font-size: 1.2em; font-weight: bold; color: #ffffff"
+    > Выберете карту <input type="file" name="f" id="map" /> </pre>
     <form action="page.html">
       <input id="Next" type="submit" value="Далее" />
     </form>

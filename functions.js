@@ -536,11 +536,46 @@ export function visualwalls(map){
 //###########################################################################################################################################
 
 function centre(bot, brick){
-    if(bot.x > brick.x && bot.x + bot.width < brick.x + brick.width &&
-        bot.y > brick.y && bot.y + bot.height < brick.y + brick.height){
+    if(bot.x >= brick.x && bot.x + bot.width <= brick.x + brick.width &&
+        bot.y >= brick.y && bot.y + bot.height <= brick.y + brick.height){
             return true;
     }
     return false;
+}
+
+function clear_way(map, bot){
+    let x1, y1;
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(inside2(bot, map.wall[i][j])){
+                y1 = i;
+                x1 = j;
+            }
+        }
+    }
+    let option = []
+    x1--;
+    if(!map.wall[y1][x1].is || map.wall[y1][x1].status == 3){
+        option.push(y1 * 25 + x1);
+    }
+    x1++;
+    x1++;
+    if(!map.wall[y1][x1].is || map.wall[y1][x1].status == 3){
+        option.push(y1 * 25 + x1);
+    }
+    x1--;
+    y1++;
+    if(!map.wall[y1][x1].is || map.wall[y1][x1].status == 3){
+        option.push(y1 * 25 + x1);
+    }
+    y1--;
+    y1--;
+    if(!map.wall[y1][x1].is || map.wall[y1][x1].status == 3){
+        option.push(y1 * 25 + x1);
+    }
+    y1++;
+    let i = Math.floor(Math.random() * option.length)
+    return option[i];
 }
 
 
@@ -561,7 +596,7 @@ export function appearence2(tank, last){
     else{tank.direction = -1}
 }
 
-export function appearence_bot(bot, bot_way, map){
+export function appearence_bot(bot, bot_way, map, time, dt){
     let x1, y1;
     for(let i = 0; i < map.wall.length; ++i){
         for(let j = 0; j < map.wall[i].length; ++j){
@@ -571,12 +606,71 @@ export function appearence_bot(bot, bot_way, map){
             }
         }
     }
-    if(bot_way.length > 1){
-        if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direct = 0}
-        else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direct = 1}
-        else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direct = 2}
-        else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direct = 3}
-    } else {bot.direction = -1}
+    if(centre(bot, map.wall[y1][x1]) && y1 * 25 + x1 != bot.prev){
+        console.log(bot.passed)
+        bot.last_centre_time = time
+        if(bot.prev != y1 * 25 + x1){
+            bot.passed++;
+            bot.prev = y1 * 25 + x1;
+        }
+        if(bot.move_type){
+            let destination = clear_way(map, bot);
+            let x2 = destination % 25;
+            let y2 = Math.floor(destination / 25)
+            if(y2 > y1){
+                bot.direction = 2;
+            } else if(y2 < y1){
+                bot.direction = 0;
+            } else if(x2 < x1){
+                bot.direction = 3;
+            } else if(x2 > y1){
+                bot.direction = 1;
+            }
+            
+            if(bot.direction){
+                bot.image = bot.costumes[bot.direction];
+                bot.direct = bot.direction;
+            }
+            if(bot.passed > bot.go_with){
+                bot.passed = 0;
+                bot.move_type = 0;
+            }
+        } else {
+            if(bot_way.length > 1){
+                if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direct = 0}
+                else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direct = 1}
+                else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direct = 2}
+                else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direct = 3}
+            } else {bot.direction = -1}
+            if(bot.passed > bot.go_without){
+                bot.passed = 0;
+                bot.move_type = 1;
+            }
+        }
+    }
+
+    if(time - bot.last_centre_time > dt * 3){
+        if(bot.direct == 0){
+            bot.direction = 2;
+            bot.direct = 2;
+            bot.image = bot.costumes[2]
+        } else if(bot.direct == 1){
+            bot.direction = 3;
+            bot.direct = 3;
+            bot.image = bot.costumes[3]
+        } else if(bot.direct == 2){
+            bot.direction = 0;
+            bot.direct = 0;
+            bot.image = bot.costumes[0]
+        } else if(bot.direct == 3){
+            bot.direction = 1;
+            bot.direct = 1;
+            bot.image = bot.costumes[1]
+        }
+        bot.passed = 0;
+        bot.move_type = 0;
+        bot.last_centre_time = time;
+    }
 }
 
 
@@ -649,6 +743,13 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
             tankA.points++;
             map.red_i = 0;
             map.blue_i = 0;
+            if(tankA.passed || tankB.passed){
+                if(tankA.passed){
+                    tankA.passed = 0;
+                } else {
+                    tankB.passed = 0;
+                }
+            }
             reset_map(map, box, time);
             for(let i = 0; i < 3; ++i){map.wall[0][i + 1].image = map.wall[0][i + 1].blue;}
             for(let i = 0; i < 3; ++i){map.wall[0][i + 22].image = map.wall[0][i + 22].red;}
@@ -670,6 +771,13 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
             tankA.points++;
             map.red_i = 0;
             map.blue_i = 0;
+            if(tankA.passed || tankB.passed){
+                if(tankA.passed){
+                    tankA.passed = 0;
+                } else {
+                    tankB.passed = 0;
+                }
+            }
             reset_map(map, box, time);
             for(let i = 0; i < 3; ++i){map.wall[0][i + 1].image = map.wall[0][i + 1].blue;}
             for(let i = 0; i < 3; ++i){map.wall[0][i + 22].image = map.wall[0][i + 22].red;}

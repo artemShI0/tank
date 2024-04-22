@@ -12,6 +12,9 @@ document.getElementById("Next").onclick = function () {
   let ars = document.querySelector(".ars").value;
   localStorage.setItem("ars", ars);
 
+  let use_bot = document.getElementById("bot");
+  localStorage.setItem("use_bot", use_bot.checked);
+
   let file_map = "";
   let file = document.getElementById("map").files[0];
   let reader = new FileReader();
@@ -38,6 +41,9 @@ document.getElementById("Default").onclick = function () {
 
   let ars = 5;
   localStorage.setItem("ars", ars);
+
+  let use_bot = document.getElementById("bot");
+  localStorage.setItem("use_bot", use_bot.checked);
 
   let file_map =
     "11111111111111111111111111" +

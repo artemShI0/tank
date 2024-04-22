@@ -241,24 +241,30 @@ export let tank2 = {
 };
 
 export let bot = {
-  name: "red",
-  costumes: costumes2,
-  x: 1300,
-  y: 325,
-  sx: 1300,
-  sy: 325,
+  name: "blue",
+  costumes: costumes1,
+  x: 206,
+  y: 306,
+  sx: 206,
+  sy: 306,
   width: 40,
   height: 40,
   dx: 5,
   dy: 5,
-  direction: 3,
+  direction: 1,
   direct: 1,
   bullet_max: 4,
   points: 0,
   live: 3,
-  numb: 2,
+  numb: 1,
   insy: 5,
-  insx: 23,
+  insx: 3,
+  passed: 0,
+  go_without: 15,
+  go_with: 6,
+  prev: 0,
+  move_type: 0, // 0 - к танку, 1 - блуждание
+  last_centre_time: 0, 
 };
 
 export let kust = {
@@ -365,7 +371,7 @@ export let map = {
 
 tank1.image = image1;
 tank2.image = image2;
-bot.image = image2;
+bot.image = image1;
 kust.image = image3;
 out.image = image4;
 brick_brown.image = image5;

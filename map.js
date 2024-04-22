@@ -84,6 +84,17 @@ for (let i = 1; i < map.wall.length - 1; ++i) {
   }
 }
 
+
+map.wall[5][1].image = map.wall[5][1].blue;
+map.wall[5][2].image = map.wall[5][2].blue;
+map.wall[6][1].image = map.wall[6][1].blue;
+map.wall[6][2].image = map.wall[6][2].blue;
+
+map.wall[5][23].image = map.wall[5][23].red;
+map.wall[5][24].image = map.wall[5][24].red;
+map.wall[6][23].image = map.wall[6][23].red;
+map.wall[6][24].image = map.wall[6][24].red;
+
 function generClick() {
   text = input(map);
 }

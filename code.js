@@ -69,8 +69,9 @@ document.onkeydown = function checkKeycode(event){
     already = true;
     document.querySelector(".outStart").innerHTML = '';
     
-
-
+    
+    
+    let use_bot = localStorage.getItem("use_bot");
     tank1.dx = 1 * localStorage.getItem("Tspeed");
     tank1.dy = 1 * localStorage.getItem("Tspeed");
     tank2.dx = 1 * localStorage.getItem("Tspeed");
@@ -105,7 +106,6 @@ document.onkeydown = function checkKeycode(event){
     ///setmap1(map.walls_goriz, map.walls_vert, brick_white);
     
     setmap(map, brick_white, file_map);
-    let use_bot = true;
     
     setbullet(tank1, bullet);
     setbullet(tank2, bullet);
@@ -121,16 +121,18 @@ document.onkeydown = function checkKeycode(event){
     tank1. y = map.wall[5][2].y + map.wall[5][2].height/2 - tank1.height/2;
     tank2.x = map.wall[5][23].x + map.wall[5][23].width/2 - tank2.width/2;
     tank2. y = map.wall[5][23].y + map.wall[5][23].height/2 - tank2.height/2;
-    bot.x = map.wall[5][23].x + map.wall[5][23].width/2 - bot.width/2;
-    bot.y = map.wall[5][23].y + map.wall[5][23].height/2 - bot.height/2;
+    bot.x = map.wall[5][2].x + map.wall[5][2].width/2 - tank1.width/2;
+    bot.y = map.wall[5][2].y + map.wall[5][2].height/2 - tank1.height/2
     tank1.sx = tank1.x;
     tank1.sy = tank1.y;
     tank2.sx = tank2.x;
     tank2.sy = tank2.y;
     bot.sx = bot.x;
     bot.sy = bot.y;
+    bot.last_centre_time = new Date()
+
     
-    
+    console.log(map)
     //########################################################################################################
     
     function render() {
@@ -149,8 +151,7 @@ document.onkeydown = function checkKeycode(event){
       //    ctx.drawImage(kust.image, kust.x, kust.y, kust.width, kust.height);
       //    pointStatus(point, mouse);
       
-      
-      if(!use_bot){
+      if(use_bot == "false"){
         ctx.drawImage(tank1.image, tank1.x, tank1.y, tank1.width, tank1.height);
         ctx.drawImage(tank2.image, tank2.x, tank2.y, tank2.width, tank2.height);
         appearence1(tank1, last(push1, pusheri));
@@ -165,20 +166,20 @@ document.onkeydown = function checkKeycode(event){
         document.querySelector(".outBlue").innerHTML = tank1.points;
         document.querySelector(".outRed").innerHTML = tank2.points;
       } else {
-        bot_way = findway(bot, tank1, map);
+        bot_way = findway(bot, tank2, map);
         show_way(bot_way, map);
-        ctx.drawImage(tank1.image, tank1.x, tank1.y, tank1.width, tank1.height);
+        ctx.drawImage(tank2.image, tank2.x, tank2.y, tank2.width, tank2.height);
         ctx.drawImage(bot.image, bot.x, bot.y, bot.width, bot.height);
-        appearence1(tank1, last(push1, pusheri));
-        appearence_bot(bot, bot_way, map);
-        move1(tank1, bot, map, box);
-        move1(bot, tank1, map, box);
-        time1 = shot(pressed["KeyQ"], tank1, time, time1, dt);
-        time2 = bot_shot(bot_way, tank1, map, bot, time, time2, dt);
-        move_box(box, time, map, tank1, bot);
-        bulletflight(tank1, bot, map, winner, box, time, sound);
-        bulletflight(bot, tank1, map, winner, box, time, sound);
-        document.querySelector(".outBlue").innerHTML = tank1.points;
+        appearence2(tank2, last(push2, pusherj));
+        appearence_bot(bot, bot_way, map, time, dt);
+        move1(tank2, bot, map, box);
+        move1(bot, tank2, map, box);
+        time1 = shot(pressed["Space"], tank2, time, time1, dt);
+        time2 = bot_shot(bot_way, tank2, map, bot, time, time2, dt);
+        move_box(box, time, map, tank2, bot);
+        bulletflight(tank2, bot, map, winner, box, time, sound);
+        bulletflight(bot, tank2, map, winner, box, time, sound);
+        document.querySelector(".outBlue").innerHTML = tank2.points;
         document.querySelector(".outRed").innerHTML = bot.points;
       }
     
