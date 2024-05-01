@@ -97,17 +97,20 @@ map.wall[6][24].image = map.wall[6][24].red;
 
 function generClick() {
   text = input(map);
+  document.getElementById("ans").innerHTML = text;    
 }
 
 
 //########################################################################################################
 
+
+let i_last = -1, j_last = -1;
 function render() {
   let time = new Date();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   visualwalls(map);
 
-  if (mouse.pressed && time - time0 > dt) {
+  if (mouse.pressed) {
     for (let i = 1; i < map.wall.length - 1; ++i) {
       for (let j = 1; j < map.wall[i].length - 1; ++j) {
         if (
@@ -116,25 +119,20 @@ function render() {
           mouse.y > map.wall[i][j].y &&
           mouse.y < map.wall[i][j].y + myBrick.width
         ) {
-          if (
-            !((i == 5 || i == 6) && (j == 1 || j == 2 || j == 23 || j == 24))
-          ) {
-            if (map.wall[i][j].use) {
-              map.wall[i][j].image = map.wall[i][j].dark;
-              map.wall[i][j].use = 0;
-            } else {
-              map.wall[i][j].image = map.wall[i][j].white;
-              map.wall[i][j].use = 1;
-            }
-            time0 = time;
+          if ( !((i == 5 || i == 6) && (j == 1 || j == 2 || j == 23 || j == 24)) && !(i == i_last && j == j_last) ) {
+              if (map.wall[i][j].use) {
+                map.wall[i][j].image = map.wall[i][j].dark;
+                map.wall[i][j].use = 0;
+              } else {
+                map.wall[i][j].image = map.wall[i][j].white;
+                map.wall[i][j].use = 1;
+              }
           }
         }
       }
     }
   }
-
-  document.querySelector(".outText").innerHTML = text;    
-
   window.requestAnimationFrame(render);
 }
 window.requestAnimationFrame(render);
+

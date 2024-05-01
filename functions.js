@@ -442,9 +442,7 @@ function read_matrix(text){
 }
 
 
-function setbrick(i, j, brick_white){
-    let x0 = 105;
-    let y0 = 55;
+function setbrick(i, j, brick_white, x0, y0){
     let brick = {}
     brick.x = x0 + j * brick_white.width;               
     brick.y = y0 + i * brick_white.height;
@@ -467,10 +465,54 @@ function setbrick(i, j, brick_white){
 
 
 export function setmap(map, brick_white, text){
+    if(!text){
+        text =
+        "11111111111111111111111111" +
+        "\r" +
+        "\n" +
+        "10000000010000001000000001" +
+        "\r" +
+        "\n" +
+        "10000000010000001000000001" +
+        "\r" +
+        "\n";
+        text +=
+        "10000000010011001000000001" +
+        "\r" +
+        "\n" +
+        "10000000010011001000000001" +
+        "\r" +
+        "\n";
+        text +=
+        "10000000000011000000000001" +
+        "\r" +
+        "\n" +
+        "10000000000011000000000001" +
+        "\r" +
+        "\n";
+        text +=
+        "10000000010011001000000001" +
+        "\r" +
+        "\n" +
+        "10000000010011001000000001" +
+        "\r" +
+        "\n";
+        text +=
+        "10000000010000001000000001" +
+        "\r" +
+        "\n" +
+        "10000000010000001000000001" +
+        "\r" +
+        "\n" +
+        "11111111111111111111111111" +
+        "\r" +
+        "\n" +
+        "end;";
+    }
     for(let i = 0; i < 12; ++i){
         map.wall[i] = [];
         for(let j = 0; j < 26; ++j){
-            map.wall[i][j] = setbrick(i, j, brick_white);
+            map.wall[i][j] = setbrick(i, j, brick_white, 105, 55);
         }
     }
     for(let i = 0; i < map.wall.length; ++i){
@@ -501,7 +543,7 @@ export function setmap4(map, brick_white, text){
     for(let i = 0; i < 12; ++i){
         map.wall[i] = [];
         for(let j = 0; j < 26; ++j){
-            map.wall[i][j] = setbrick(i, j, brick_white);
+            map.wall[i][j] = setbrick(i, j, brick_white, 105, 155);
         }
     }
     for(let i = 0; i < map.wall.length; ++i){
@@ -607,7 +649,7 @@ export function appearence_bot(bot, bot_way, map, time, dt){
         }
     }
     if(centre(bot, map.wall[y1][x1]) && y1 * 25 + x1 != bot.prev){
-        console.log(bot.passed)
+
         bot.last_centre_time = time
         if(bot.prev != y1 * 25 + x1){
             bot.passed++;

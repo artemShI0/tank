@@ -85,19 +85,19 @@
     <pre
       id="SpeedT"
       style="font-size: 1.2em; font-weight: bold; color: #ffffff"
-    > Скорость танков <input  type="number" class="Tspeed" /> </pre>
+    > Скорость танков <input id="Tspeed" type="number" value=5 class="Tspeed" /> </pre>
     <pre
       id="SpeedB"
       style="font-size: 1.2em; font-weight: bold; color: #ffffff"
-    > Скорость пуль <input type="number" class="Bspeed" /> </pre>
+    > Скорость пуль <input id="Bspeed" type="number" value=20  class="Bspeed" /> </pre>
     <pre
       id="frequency"
       style="font-size: 1.2em; font-weight: bold; color: #ffffff"
-    > Частота <input  type="number" class="freq" /> </pre>
+    > Частота <input id="freq" type="number" value=300 class="freq" /> </pre>
     <pre
       id="arsenal"
       style="font-size: 1.2em; font-weight: bold; color: #ffffff"
-    > Арсенал <input  type="number" class="ars" /> </pre>
+    > Арсенал <input id="ars" type="number" value=5 class="ars" /> </pre>
     <pre
       id="use_bot"
       style="font-size: 1.2em; font-weight: bold; color: #ffffff"
@@ -112,9 +112,12 @@
     <form action="create.html">
       <input id="Create" type="submit" value="Создать карту" />
     </form>
-    <form action="page.html">
+    <button id="Default">Стандартные настройки</button>
+<!--    
+  <form action="page.html">
       <input id="Default" type="submit" value="Стандартные настройки" />
     </form>
+-->
     <script type="module" src="setting.js"></script>
   </body>
 </html>

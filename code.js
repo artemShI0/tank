@@ -63,6 +63,10 @@ import {
 //#######################################################################################################
 let already = false;
 
+
+
+
+
 document.onkeydown = function checkKeycode(event){
 
   if(event.code == "Space" && !already){
@@ -132,7 +136,6 @@ document.onkeydown = function checkKeycode(event){
     bot.last_centre_time = new Date()
 
     
-    console.log(map)
     //########################################################################################################
     
     function render() {
@@ -179,8 +182,8 @@ document.onkeydown = function checkKeycode(event){
         move_box(box, time, map, tank2, bot);
         bulletflight(tank2, bot, map, winner, box, time, sound);
         bulletflight(bot, tank2, map, winner, box, time, sound);
-        document.querySelector(".outBlue").innerHTML = tank2.points;
-        document.querySelector(".outRed").innerHTML = bot.points;
+        document.querySelector(".outRed").innerHTML = tank2.points;
+        document.querySelector(".outBlue").innerHTML = bot.points;
       }
     
       box.see ? ctx.drawImage(box.image, box.x, box.y, box.width, box.height) : 0;

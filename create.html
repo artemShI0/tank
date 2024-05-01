@@ -22,7 +22,7 @@
       }
       #gener {
         position: fixed;
-        top: 20px;
+        top: 70px;
         left: 600px;
         height: 30px;
         width: 300px;
@@ -36,6 +36,13 @@
         font-size: 1em;
         color: #ffffff;  
       }
+      #ans {
+        position: fixed;
+        top: 220px;
+        left: 900px;
+      
+      }
+
 
     </style>
   </head>
@@ -46,7 +53,8 @@
       <pre id="text" class="outText"></pre>
       <button id="gener">сгенерировать карту</button>
       <canvas id="canvas" width="1500" height="700"></canvas>
-      <script type="module" src="map.js"></script>
+      <textarea id="ans" rows="13" cols="26"></textarea>
+      <script type="module" src="map.js" value=""></script>
     </body>
   </body>
 </html>
