@@ -127,6 +127,7 @@ function render() {
                 map.wall[i][j].image = map.wall[i][j].white;
                 map.wall[i][j].use = 1;
               }
+              i_last = i, j_last = j
           }
         }
       }
