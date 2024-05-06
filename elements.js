@@ -218,10 +218,13 @@ export let tank1 = {
   insy: 5,
   insx: 3,
   passed: 0,
-  go_without: 15,
-  go_with: 6,
+  go_without: Math.floor(Math.random() * (10 - 3) + 3),
+  go_with: Math.floor(Math.random() * (10 - 3) + 3),
   prev: 0,
   move_type: 0, // 0 - к танку, 1 - блуждание
+  randx: Math.floor(Math.random() * (25)),
+  randy: Math.floor(Math.random() * (12)),
+  taran: false,
   last_centre_time: 0, 
 };
 
@@ -245,10 +248,13 @@ export let tank2 = {
   insy: 5,
   insx: 23,
   passed: 0,
-  go_without: 15,
-  go_with: 6,
+  go_without: Math.floor(Math.random() * (10 - 3) + 3),
+  go_with: Math.floor(Math.random() * (10 - 3) + 3),
   prev: 0,
   move_type: 0, // 0 - к танку, 1 - блуждание
+  randx: Math.floor(Math.random() * (25)),
+  randy: Math.floor(Math.random() * (12)),
+  taran: false,
   last_centre_time: 0, 
 };
 

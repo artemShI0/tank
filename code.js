@@ -58,6 +58,7 @@ import {
   show_way,
   appearence_bot,
   bot_shot,
+  find_rand_way,
 } from "./functions.js";
 
 //#######################################################################################################
@@ -160,8 +161,12 @@ document.onkeydown = function checkKeycode(event){
             appearence1(tank1, last(push1, pusheri));
             time1 = shot(pressed["KeyQ"], tank1, time, time1, dt);
         } else {
-            bot_way1 = findway(tank1, tank2, map);
-            show_way(bot_way1, map);
+            if(tank1.move_type == 0){
+              bot_way1 = findway(tank1, tank2, map);
+            } else {
+              bot_way1 = find_rand_way(tank1, tank1.randx, tank1.randy, map);
+            }
+ //           show_way(bot_way1, map);
             appearence_bot(tank1, bot_way1, map, time, dt);
             time1 = bot_shot(bot_way1, tank2, map, tank1, time, time1, dt);
         }
@@ -169,8 +174,12 @@ document.onkeydown = function checkKeycode(event){
             appearence2(tank2, last(push2, pusherj));
             time2 = shot(pressed["Space"], tank2, time, time2, dt);
         } else {
+          if(tank1.move_type == 0){
             bot_way2 = findway(tank2, tank1, map);
-            show_way(bot_way2, map);
+          } else {
+            bot_way2 = find_rand_way(tank2, tank2.randx, tank2.randy, map);
+          }
+  //          show_way(bot_way2, map);
             appearence_bot(tank2, bot_way2, map, time, dt);
             time2 = bot_shot(bot_way2, tank1, map, tank2, time, time2, dt);
         }
@@ -181,12 +190,11 @@ document.onkeydown = function checkKeycode(event){
         
         bulletflight(tank1, tank2, map, winner, box, time, sound, sound_on);
         bulletflight(tank2, tank1, map, winner, box, time, sound, sound_on);
-        move_box(box, time, map, tank2, tank1);
+        move_box(box, time, map, tank1, tank2);
         document.querySelector(".outRed").innerHTML = tank2.points;
         document.querySelector(".outBlue").innerHTML = tank1.points;
-
-   
-        console.log(sound.on)
+        
+  
         //    move2(tank2, pressed, brick_white, a, b, c, d);
         //    inside(tank1, brick_white, a, b, c, d);
         //    inside(tank2, brick_white, a, b, c, d);

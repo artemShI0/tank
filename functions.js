@@ -2,6 +2,19 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 
+//###########################################################################################################################################
+//###########################################################################################################################################
+
+function rand(min, max){
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+
+//###########################################################################################################################################
+//###########################################################################################################################################
+
+
+
 export function drawPoint(point) {
     ctx.beginPath();
     ctx.ellipse(point.x, point.y, point.radius, point.radius, Math.PI / 4, 0, 2 * Math.PI);
@@ -578,8 +591,8 @@ export function visualwalls(map){
 //###########################################################################################################################################
 
 function centre(bot, brick){
-    if(bot.x >= brick.x && bot.x + bot.width <= brick.x + brick.width &&
-        bot.y >= brick.y && bot.y + bot.height <= brick.y + brick.height){
+    if(bot.x > brick.x && bot.x + bot.width < brick.x + brick.width &&
+        bot.y > brick.y && bot.y + bot.height < brick.y + brick.height){
             return true;
     }
     return false;
@@ -622,6 +635,8 @@ function clear_way(map, bot){
 
 
 
+
+
 export function appearence1(tank, last){
     if(last == "KeyW"){tank.image = tank.costumes[0]; tank.direction = 0; tank.direct = 0}
     else if(last == "KeyD"){tank.image = tank.costumes[1]; tank.direction = 1; tank.direct = 1}
@@ -655,63 +670,77 @@ export function appearence_bot(bot, bot_way, map, time, dt){
             bot.passed++;
             bot.prev = y1 * 25 + x1;
         }
-        if(bot.move_type){
-            let destination = clear_way(map, bot);
-            let x2 = destination % 25;
-            let y2 = Math.floor(destination / 25)
-            if(y2 > y1){
-                bot.direction = 2;
-            } else if(y2 < y1){
-                bot.direction = 0;
-            } else if(x2 < x1){
-                bot.direction = 3;
-            } else if(x2 > y1){
-                bot.direction = 1;
+        
+        if(bot_way.length > 1){
+            if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direct = 0}
+            else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direct = 1}
+            else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direct = 2}
+            else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direct = 3}
+        } else {bot.direction = -1}
+        if(bot.passed >= bot.go_without && bot.move_type == 0){
+            bot.go_without = rand(3, 10);
+            bot.go_with = rand(3, 10);
+            bot.passed = 0;
+            let rand_x = rand(0, bot.go_with + 1);
+            let rand_y = bot.go_with + 1 - rand_x;
+            if(Math.random() > 0.5){
+                rand_x *= -1;
             }
-            
-            if(bot.direction){
-                bot.image = bot.costumes[bot.direction];
-                bot.direct = bot.direction;
+            if(Math.random() > 0.5){
+                rand_y *= -1;
             }
-            if(bot.passed > bot.go_with){
-                bot.passed = 0;
-                bot.move_type = 0;
+            bot.randx = bot.insx + rand_x;
+            bot.randy = bot.insy + rand_y;
+            if(bot.randx < 1){
+                bot.randx = 1
             }
-        } else {
-            if(bot_way.length > 1){
-                if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direct = 0}
-                else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direct = 1}
-                else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direct = 2}
-                else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direct = 3}
-            } else {bot.direction = -1}
-            if(bot.passed > bot.go_without){
-                bot.passed = 0;
+            if(bot.randx > 23){
+                bot.randx = 23
+            }
+            if(bot.randy < 1){
+                bot.randy = 1
+            }
+            if(bot.randy > 10){
+                bot.randy = 10
+            }
+            if(Math.random() > 0.5){
                 bot.move_type = 1;
+                bot.taran = Math.random() > 0.5
             }
+        }
+        if(bot.passed >= bot.go_with && bot.move_type == 1){
+            bot.passed = 0;
+            bot.move_type = 0;
+            bot.taran = Math.random() > 0.5
         }
     }
 
-    if(time - bot.last_centre_time > dt * 3){
-        if(bot.direct == 0){
-            bot.direction = 2;
-            bot.direct = 2;
-            bot.image = bot.costumes[2]
-        } else if(bot.direct == 1){
-            bot.direction = 3;
-            bot.direct = 3;
-            bot.image = bot.costumes[3]
-        } else if(bot.direct == 2){
-            bot.direction = 0;
-            bot.direct = 0;
-            bot.image = bot.costumes[0]
-        } else if(bot.direct == 3){
-            bot.direction = 1;
-            bot.direct = 1;
-            bot.image = bot.costumes[1]
-        }
+    if(time - bot.last_centre_time > dt * 3.5){
+        // if(bot.direct == 0){
+        //     bot.direction = 2;
+        //     bot.direct = 2;
+        //     bot.image = bot.costumes[2]
+        // } else if(bot.direct == 1){
+        //     bot.direction = 3;
+        //     bot.direct = 3;
+        //     bot.image = bot.costumes[3]
+        // } else if(bot.direct == 2){
+        //     bot.direction = 0;
+        //     bot.direct = 0;
+        //     bot.image = bot.costumes[0]
+        // } else if(bot.direct == 3){
+        //     bot.direction = 1;
+        //     bot.direct = 1;
+        //     bot.image = bot.costumes[1]
+        // }
+
         bot.passed = 0;
         bot.move_type = 0;
+        bot.prev = 0;
         bot.last_centre_time = time;
+    }
+    if(bot_way.length == 0){
+        bot.taran = true;
     }
 }
 
@@ -920,7 +949,9 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound, so
 //###########################################################################################################################################
 
 
+
 export function bot_shot(bot_way, tank1, map, tank, time, time0, dt){
+    let barrier = false;
     let button = false;
     let x1, y1, x2, y2;
     for(let i = 0; i < map.wall.length; ++i){
@@ -938,9 +969,17 @@ export function bot_shot(bot_way, tank1, map, tank, time, time0, dt){
     if((x1 == x2 && (tank.direction == 0 || tank.direction == 2)) || (y1 == y2 && (tank.direction == 1 || tank.direction == 3))){
         button = true;
     }
+    if(bot_way.length > 1){
+        if(map.wall[bot_way[1][0]][bot_way[1][1]].status != 3 && map.wall[bot_way[1][0]][bot_way[1][1]].is){
+            button = true;
+            barrier = true;
+        }
+    }
     if(button && !tank.bullets[tank.bullet_i].see && time0 < time - dt){
-        bulletset(tank);
-        tank.bullet_i++;
+        if(Math.random() > 0.5 || barrier){
+            bulletset(tank);
+            tank.bullet_i++;
+        }
         if(tank.bullet_i == tank.bullet_max){tank.bullet_i = 0}
         time0 = time
     }
@@ -1060,9 +1099,20 @@ function conect(v, i, n, m, map){
     return false;
 }
 
+function taran_conect(v, i, n, m, map){
+    if( Math.abs(Math.floor(v/m) - Math.floor(i/m)) == 0 && Math.abs(v%m - i%m) == 1){
+        return true;
+    }
+    if( Math.abs(Math.floor(v/m) - Math.floor(i/m)) == 1 && Math.abs(v%m - i%m) == 0){
+        return true;
+    }
+    return false;
+}
 
 
-function bfs(v, n, m, way, used, dist, q, map){
+
+function bfs(v, n, m, way, used, dist, q, map, taran){
+    let con;
     way[v].push(v);
     q.push(v);
     dist[v] = 0;
@@ -1070,7 +1120,12 @@ function bfs(v, n, m, way, used, dist, q, map){
     while(q.length > 0){
         v = q.shift();
         for(let i = 0; i < n * m; ++i){
-            if(conect(v, i, n, m, map)){
+            if(taran){
+                con = taran_conect(v, i, n, m, map);
+            } else {
+                con = conect(v, i, n, m, map);
+            }
+            if(con){
                 if(!used[i]){
                     q.push(i);
                     used[i] = 1;
@@ -1110,10 +1165,35 @@ export function findway(tank2, tank1, map){
     for(let i = 0; i < n * m; ++i){
         way[i] = []
     }
-    bfs(y1 * m + x1, n, m, way, used, dist, q, map);
+
+    bfs(y1 * m + x1, n, m, way, used, dist, q, map, tank2.taran);
     return coord(way[y2 * m + x2], m);
 }
 
+
+export function find_rand_way(tank, x, y, map){
+    for(let i = 0; i < map.wall.length; ++i){
+        for(let j = 0; j < map.wall[i].length; ++j){
+            if(inside2(tank, map.wall[i][j])){
+                tank.insy = i;
+                tank.insx = j;
+            }
+        }
+    }
+    let x1 = tank.insx;
+    let y1 = tank.insy;
+    let way = []
+    let used = []
+    let dist = []
+    let q = []
+    let n = 12
+    let m = 26
+    for(let i = 0; i < n * m; ++i){
+        way[i] = []
+    }
+    bfs(y1 * m + x1, n, m, way, used, dist, q, map, true);
+    return coord(way[y * m + x], m);
+}
 
 export function show_way(coord, map){
     for(let i = 0; i < coord.length; ++i){
