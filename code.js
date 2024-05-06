@@ -61,21 +61,24 @@ import {
 } from "./functions.js";
 
 //#######################################################################################################
+
+let sound_on = true;
+// document.getElementById('stopButton').addEventListener('click', () => {
+//     document.querySelectorAll('audio').forEach(el => el.pause());
+//   });
+
+
+
 let already = false;
-
-
-
-
-
 document.onkeydown = function checkKeycode(event){
 
-  if(event.code == "Space" && !already){
+  if(event.code == "Enter" && !already){
     already = true;
     document.querySelector(".outStart").innerHTML = '';
     
-    
-    
-    let use_bot = localStorage.getItem("use_bot");
+    let use_bot = false;
+    let ub1 = localStorage.getItem("ub1");
+    let ub2 = localStorage.getItem("ub2");
     tank1.dx = 1 * localStorage.getItem("Tspeed");
     tank1.dy = 1 * localStorage.getItem("Tspeed");
     tank2.dx = 1 * localStorage.getItem("Tspeed");
@@ -94,13 +97,10 @@ document.onkeydown = function checkKeycode(event){
     let b = 10;
     let c = (700 / brick_white.height - 1) * brick_white.height - 5;
     let d = (1530 / brick_white.width - 1) * brick_white.width - 15;
-    let bot_way = []
+    let bot_way1 = []
+    let bot_way2 = []
     box.last = new Date();
-    let sound = {
-      hello: hello,
-      explosion: explosion,
-      piu: piu,
-    };
+
     hello.play();
     hello.onended = function () {
       background.play();
@@ -134,11 +134,91 @@ document.onkeydown = function checkKeycode(event){
     bot.sx = bot.x;
     bot.sy = bot.y;
     bot.last_centre_time = new Date()
-
+    tank1.last_centre_time = new Date()
+    tank2.last_centre_time = new Date()
     
     //########################################################################################################
     
+    console.log(map)
     function render() {
+        time = new Date();
+        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+        visualwalls(map);
+        move1(tank2, tank1, map, box);
+        move1(tank1, tank2, map, box);
+        
+        //    ctx.drawImage(brick_brown.image, 700, 500, brick_brown.width, brick_brown.height);
+        //    drawCage(cage);
+        ////      drawRect(rect);
+        //    drawPoint(point);
+        //    drawOut(out);
+        //   ctx.drawImage(box.image_sh, tank1.x + tank1.width / 2 - box.width_sh / 2, tank1.y + tank1.height / 2 - box.height_sh / 2, box.width_sh, box.height_sh)
+        //    ctx.drawImage(kust.image, kust.x, kust.y, kust.width, kust.height);
+        //    pointStatus(point, mouse);
+        
+        if(ub1 == 'false'){
+            appearence1(tank1, last(push1, pusheri));
+            time1 = shot(pressed["KeyQ"], tank1, time, time1, dt);
+        } else {
+            bot_way1 = findway(tank1, tank2, map);
+            show_way(bot_way1, map);
+            appearence_bot(tank1, bot_way1, map, time, dt);
+            time1 = bot_shot(bot_way1, tank2, map, tank1, time, time1, dt);
+        }
+        if(ub2 == 'false'){
+            appearence2(tank2, last(push2, pusherj));
+            time2 = shot(pressed["Space"], tank2, time, time2, dt);
+        } else {
+            bot_way2 = findway(tank2, tank1, map);
+            show_way(bot_way2, map);
+            appearence_bot(tank2, bot_way2, map, time, dt);
+            time2 = bot_shot(bot_way2, tank1, map, tank2, time, time2, dt);
+        }
+        ctx.drawImage(tank1.image, tank1.x, tank1.y, tank1.width, tank1.height);
+        ctx.drawImage(tank2.image, tank2.x, tank2.y, tank2.width, tank2.height);
+        
+        
+        
+        bulletflight(tank1, tank2, map, winner, box, time, sound, sound_on);
+        bulletflight(tank2, tank1, map, winner, box, time, sound, sound_on);
+        move_box(box, time, map, tank2, tank1);
+        document.querySelector(".outRed").innerHTML = tank2.points;
+        document.querySelector(".outBlue").innerHTML = tank1.points;
+
+   
+        console.log(sound.on)
+        //    move2(tank2, pressed, brick_white, a, b, c, d);
+        //    inside(tank1, brick_white, a, b, c, d);
+        //    inside(tank2, brick_white, a, b, c, d);
+        ////    function small(){rect.height = 0; rect.width = 0;}
+        ////    if(winner.who = 'red'){rect.height = 100; rect.width = 100; setTimeout(small, 5000);}
+        ////    if(winner.who = 'blue'){rect.height = 100; rect.width = 100; setTimeout(small, 5000);}
+        box.see ? ctx.drawImage(box.image, box.x, box.y, box.width, box.height) : 0;
+    
+      window.requestAnimationFrame(render);
+    }
+    window.requestAnimationFrame(render);
+  }
+}
+
+
+
+
+
+
+//    ctx.drawImage(brick_brown.image, 700, 500, brick_brown.width, brick_brown.height);
+//    drawCage(cage);
+////      drawRect(rect);
+//    drawPoint(point);
+//    drawOut(out);
+//   ctx.drawImage(box.image_sh, tank1.x + tank1.width / 2 - box.width_sh / 2, tank1.y + tank1.height / 2 - box.height_sh / 2, box.width_sh, box.height_sh)
+//    ctx.drawImage(kust.image, kust.x, kust.y, kust.width, kust.height);
+//    pointStatus(point, mouse);
+
+
+
+
+/*
       time = new Date();
       ctx.clearRect(0, 0, canvas.width, canvas.height); 
       
@@ -198,8 +278,4 @@ document.onkeydown = function checkKeycode(event){
     }
     window.requestAnimationFrame(render);
   }
-}
-
-
-
-
+*/

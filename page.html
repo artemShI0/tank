@@ -46,18 +46,63 @@
         font-size: 4em;
         color: #ff0000;
       }
+      .sound_on {
+        position: fixed;
+        height: 30px;
+        width: 50px;
+        top: 15px;
+        left: 120px;
+        border: none;
+        background-image: "./images/sound_on.png";
+        background-size: cover;
+      }
     </style>
   </head>
 
   <body>
-    <audio id='music'src="./images/hello.mp3" ></audio>
-    <audio id='background'src="./images/background.mp3" loop></audio>
+    <audio id="music" src="./images/hello.mp3"></audio>
+    <audio id="background" src="./images/background.mp3" loop></audio>
     <audio id="explosion" src="./images/piu.mp3"></audio>
     <audio id="piu" src="./images/piu.mp3"></audio>
     <h1 id="bluePoints" class="outBlue">0</h1>
     <h1 id="redPoints" class="outRed">0</h1>
-    <h1 id="start" class="outStart">Нажмите пробел, чтобы начать</h1>
+    <h1 id="start" class="outStart">Нажмите Enter, чтобы начать</h1>
     <canvas id="canvas" width="1500" height="700"></canvas>
     <script type="module" src="code.js"></script>
+    <!--
+  <div> 
+    <img id="sound_on" src="./images/sound_on.png" width="114" height="38" onclick="Sound_control()" />
+  </div>
+-->
+    <img src="" alt="" />
+    <button
+      class="sound_on"
+      onclick="Sound_control()"
+      style="background-color: #000000"
+    >
+      <img class="sound_on" src="./images/sound_on.png" alt="звук" />
+    </button>
+    <script>
+      const hello = document.getElementById("music");
+      const explosion = document.getElementById("explosion");
+      const piu = document.getElementById("piu");
+      const background = document.getElementById("background");
+      var sound = {
+        hello: hello,
+        explosion: explosion,
+        piu: piu,
+        on: true,
+      };
+      function Sound_control() {
+        if (sound.on) {
+          sound.on = false;
+          background.pause();
+          hello.pause();
+        } else {
+          sound.on = true;
+          background.play();
+        }
+      }
+    </script>
   </body>
 </html>

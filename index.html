@@ -8,6 +8,22 @@
     <title>Document</title>
 
     <style>
+      .player1 {
+        position: fixed;
+        top: 100px;
+        left: 950px;
+        font-size: 1.5em;
+        color: #ffffff;
+      }
+
+      .player2 {
+        position: fixed;
+        top: 100px;
+        left: 1150px;
+        font-size: 1.5em;
+        color: #ffffff;
+      }
+
       #all {
         background-color: rgb(0, 0, 0);
       }
@@ -15,7 +31,7 @@
       #Next {
         position: fixed;
         top: 600px;
-        left: 500px;
+        left: 400px;
         height: 30px;
         width: 200px;
         font-size: 1.5em;
@@ -39,32 +55,32 @@
       #SpeedT {
         position: fixed;
         top: 100px;
-        left: 385px;
+        left: 285px;
       }
       #SpeedB {
         position: fixed;
         top: 200px;
-        left: 400px;
+        left: 300px;
       }
       #frequency {
         position: fixed;
         top: 300px;
-        left: 450px;
+        left: 350px;
       }
       #arsenal {
         position: fixed;
         top: 400px;
-        left: 450px;
+        left: 350px;
       }
       #use_bot {
         position: fixed;
         top: 450px;
-        left: 450px;
+        left: 350px;
       }
       #map_input {
         position: fixed;
         top: 500px;
-        left: 450px;
+        left: 350px;
       }
       body {
         margin: 0;
@@ -99,10 +115,6 @@
       style="font-size: 1.2em; font-weight: bold; color: #ffffff"
     > Арсенал <input id="ars" type="number" value=5 class="ars" /> </pre>
     <pre
-      id="use_bot"
-      style="font-size: 1.2em; font-weight: bold; color: #ffffff"
-    ><input type="checkbox" name="for" id="bot" class="ub"/>Играть с ботом</pre>
-    <pre
       id="map_input"
       style="font-size: 1.2em; font-weight: bold; color: #ffffff"
     > Выберете карту <input type="file" name="f" id="map" /> </pre>
@@ -113,11 +125,14 @@
       <input id="Create" type="submit" value="Создать карту" />
     </form>
     <button id="Default">Стандартные настройки</button>
-<!--    
-  <form action="page.html">
-      <input id="Default" type="submit" value="Стандартные настройки" />
-    </form>
--->
+    <pre class="player1">
+      Игрок 1 
+      <input type="checkbox" id="ub1"> Бот
+    </pre>
+    <pre class="player2">
+      Игрок 2
+      <input type="checkbox"  id="ub2"> Бот
+    </pre>
     <script type="module" src="setting.js"></script>
   </body>
 </html>

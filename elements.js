@@ -217,6 +217,12 @@ export let tank1 = {
   numb: 1,
   insy: 5,
   insx: 3,
+  passed: 0,
+  go_without: 15,
+  go_with: 6,
+  prev: 0,
+  move_type: 0, // 0 - к танку, 1 - блуждание
+  last_centre_time: 0, 
 };
 
 export let tank2 = {
@@ -231,13 +237,19 @@ export let tank2 = {
   dx: 5,
   dy: 5,
   direction: 3,
-  direct: 1,
+  direct: 3,
   bullet_max: 4,
   points: 0,
   live: 3,
   numb: 2,
   insy: 5,
   insx: 23,
+  passed: 0,
+  go_without: 15,
+  go_with: 6,
+  prev: 0,
+  move_type: 0, // 0 - к танку, 1 - блуждание
+  last_centre_time: 0, 
 };
 
 export let bot = {
@@ -334,8 +346,8 @@ export let bullet = {
 export let box = {
   x: 500,
   y: 400,
-  width: 50,
-  height: 50,
+  width: 40,
+  height: 40,
   dx: 1,
   width_b: 50,
   height_b: 50,

@@ -719,7 +719,7 @@ export function appearence_bot(bot, bot_way, map, time, dt){
 //###########################################################################################################################################
 //###########################################################################################################################################
 
-function reset_map(map, box, time){
+function reset_map(map, box, time, tank1, tank2){
     for(let i = 0; i < map.wall.length; ++i){
         for(let j = 0; j < map.wall[i].length; ++j){
             if(map.wall[i][j].is){
@@ -727,6 +727,14 @@ function reset_map(map, box, time){
                 map.wall[i][j].image = map.wall[i][j].crush[map.wall[i][j].status];
             }
         }
+    }
+    for(let i = 0; i < tank1.bullets.length; ++i){
+        tank1.bullets[i].see = false;
+        tank1.bullets[i].costume_i = 0;
+    }
+    for(let i = 0; i < tank2.bullets.length; ++i){
+        tank2.bullets[i].see = false;
+        tank2.bullets[i].costume_i = 0;
     }
     box.own = 0;
     box.see = false;
@@ -769,7 +777,7 @@ export function bulletset(tank){
 }
 
 
-export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
+export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound, sound_on){
     let pink = touch_bullet(map, tankB, bullet, box);
     
     bullet.touch = pink.touch;
@@ -792,7 +800,7 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
                     tankB.passed = 0;
                 }
             }
-            reset_map(map, box, time);
+            reset_map(map, box, time, tankA, tankB);
             for(let i = 0; i < 3; ++i){map.wall[0][i + 1].image = map.wall[0][i + 1].blue;}
             for(let i = 0; i < 3; ++i){map.wall[0][i + 22].image = map.wall[0][i + 22].red;}
             winner.who = 'red'
@@ -820,7 +828,7 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
                     tankB.passed = 0;
                 }
             }
-            reset_map(map, box, time);
+            reset_map(map, box, time, tankA, tankB);
             for(let i = 0; i < 3; ++i){map.wall[0][i + 1].image = map.wall[0][i + 1].blue;}
             for(let i = 0; i < 3; ++i){map.wall[0][i + 22].image = map.wall[0][i + 22].red;}
             winner.who = 'blue'
@@ -834,8 +842,8 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound){
         // ctx.fill();
     }
     if(bullet.touch){
-        if(bullet.costume_i == 0){
-            sound.explosion.play();
+        if(bullet.costume_i == 0 && sound_on){
+            sound.on ? sound.explosion.play() : 0;
         }
         if (bullet.direction == 1) {
             if(!bullet.costume_i){
@@ -950,11 +958,11 @@ export function shot(button, tank, time, time0, dt){
     return time0;
 }
 
-export function bulletflight(tankA, tankB, map, winner, box, time, sound){
+export function bulletflight(tankA, tankB, map, winner, box, time, sound, sound_on){
     for(let i = 0; i < tankA.bullet_max; ++i){
         if(tankA.bullets[i].see){
             ctx.drawImage(tankA.bullets[i].image, tankA.bullets[i].x, tankA.bullets[i].y, tankA.bullets[i].width, tankA.bullets[i].height);
-            bulletgo(tankA.bullets[i], tankA, tankB, map, winner, box, time, sound);
+            bulletgo(tankA.bullets[i], tankA, tankB, map, winner, box, time, sound, sound_on);
         }
     }
 }
@@ -989,27 +997,21 @@ export function move_box(box, time, map, tank1, tank2){
         }
     } else {
         if(time - box.last >= box.dt){
+            let choose = []
             box.see = true;
-            box.x = Math.random() * (1370 - 70) + 70;
-            box.y = Math.random() * (560 - 105) + 105;
             box.last = time;
-            let pink = touch_box(box, map);
-            while(pink.touch && box.x + box.width / 2 < 622 && pink.wall == 2){
-                box.x++;
-                pink = touch_box(box, map);
+            for(let i = 0; i < map.wall.length; ++i){
+                for(let j = 0; j < map.wall[i].length; ++j){
+                    if(!map.wall[i][j].is || map.wall[i][j].status == 3){
+                        choose.push([i, j]);
+                    }
+                }
             }
-            while(pink.touch && box.x + box.width / 2 >= 622 && pink.wall == 2){
-                box.x--;
-                pink = touch_box(box, map);
-            }
-            while(pink.touch && box.y + box.height / 2 < 292 && pink.wall == 1){
-                box.y++;
-                pink = touch_box(box, map);
-            }
-            while(pink.touch && box.y + box.height / 2 >= 292 && pink.wall == 1){
-                box.y--;
-                pink = touch_box(box, map);
-            }
+            let brick = Math.floor(Math.random() * choose.length)
+            let i = choose[brick][0];
+            let j = choose[brick][1];
+            box.x = map.wall[i][j].x + 5
+            box.y = map.wall[i][j].y + 5
         }
         if (box.x + box.width >= tank1.x && box.x <= tank1.x + tank1.width && box.y + box.height >= tank1.y && box.y <= tank1.y + tank1.height) {
             box.image = box.image_sh;
