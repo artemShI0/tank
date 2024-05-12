@@ -52,8 +52,8 @@ export function touch(map, tankA, tankB, box){
     for(let i = 0; i < map.wall.length; ++i){
         for(let j = 0; j < map.wall[i].length; ++j){
             if(map.wall[i][j].is){
-                if(tankA.x + tankA.width > map.wall[i][j].x && tankA.x < map.wall[i][j].x + map.wall[i][j].dx && 
-                    tankA.y + tankA.height > map.wall[i][j].y && tankA.y < map.wall[i][j].y + map.wall[i][j].dy){
+                if(tankA.x + tankA.width >= map.wall[i][j].x && tankA.x <= map.wall[i][j].x + map.wall[i][j].dx && 
+                    tankA.y + tankA.height >= map.wall[i][j].y && tankA.y <= map.wall[i][j].y + map.wall[i][j].dy){
                     if(tankA && map.wall[i][j].status != 3 && map.wall[i][j].main == false){
                         map.wall[i][j].image = map.wall[i][j].crush[map.wall[i][j].status];
                     }
@@ -653,7 +653,13 @@ export function appearence2(tank, last){
     else{tank.direction = -1}
 }
 
-export function appearence_bot(bot, bot_way, map, time, dt){
+export function appearence_bot(bot, bot_way, map, time, dt, tankB){
+
+    if(bot.move_type == 0){
+        bot_way = findway(bot, tankB, map);
+    } else {
+        bot_way = find_rand_way(bot, bot.randx, bot.randy, map);
+    }
     let x1, y1;
     for(let i = 0; i < map.wall.length; ++i){
         for(let j = 0; j < map.wall[i].length; ++j){
@@ -677,71 +683,86 @@ export function appearence_bot(bot, bot_way, map, time, dt){
             else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direct = 2}
             else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direct = 3}
         } else {bot.direction = -1}
-        if(bot.passed >= bot.go_without && bot.move_type == 0){
-            bot.go_without = rand(3, 10);
+        if(bot.passed >= bot.go_without - 2 && bot.move_type == 0){
+            bot.taran = Math.random() > bot.taran_chance[bot.strong];
+            bot.go_without = rand(3, Math.floor(bot.strong ** 1.5 * 2));
             bot.go_with = rand(3, 10);
             bot.passed = 0;
-            let rand_x = rand(0, bot.go_with + 1);
-            let rand_y = bot.go_with + 1 - rand_x;
-            if(Math.random() > 0.5){
-                rand_x *= -1;
+            if(Math.random() > bot.walk_chance[bot.strong]){   
+                bot.move_type = 1;    
+                let rand_x = rand(0, bot.go_with + 1);
+                let rand_y = bot.go_with + 1 - rand_x;
+                if(Math.random() > 0.5){
+                    rand_x *= -1;
+                }
+                if(Math.random() > 0.5){
+                    rand_y *= -1;
+                }
+                bot.randx = bot.insx + rand_x;
+                bot.randy = bot.insy + rand_y;
+                if(bot.randx < 1){
+                    bot.randx = 1
+                }
+                if(bot.randx > 23){
+                    bot.randx = 23
+                }
+                if(bot.randy < 1){
+                    bot.randy = 1
+                }
+                if(bot.randy > 10){
+                    bot.randy = 10
+                }
+                bot.go_with = Math.abs(x1 - bot.randx) + Math.abs(y1 - bot.randy) + 2;
             }
-            if(Math.random() > 0.5){
-                rand_y *= -1;
-            }
-            bot.randx = bot.insx + rand_x;
-            bot.randy = bot.insy + rand_y;
-            if(bot.randx < 1){
-                bot.randx = 1
-            }
-            if(bot.randx > 23){
-                bot.randx = 23
-            }
-            if(bot.randy < 1){
-                bot.randy = 1
-            }
-            if(bot.randy > 10){
-                bot.randy = 10
-            }
-            if(Math.random() > 0.5){
-                bot.move_type = 1;
-                bot.taran = Math.random() > 0.5
-            }
+            bot_way = find_rand_way(bot, bot.randx, bot.randy, map);
+            
+            
         }
-        if(bot.passed >= bot.go_with && bot.move_type == 1){
+        if(bot.passed >= bot.go_with - 2 && bot.move_type == 1){  
+            bot_way = findway(bot, tankB, map);
             bot.passed = 0;
             bot.move_type = 0;
-            bot.taran = Math.random() > 0.5
+            bot.taran = Math.random() > bot.taran_chance[bot.strong];
+            bot.go_without = rand(3, Math.floor(bot.strong ** 1.5 * 2));
+            if(bot_way.length > 1){
+                if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direct = 0}
+                else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direct = 1}
+                else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direct = 2}
+                else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direct = 3}
+            } else {bot.direction = -1;}
         }
     }
 
-    if(time - bot.last_centre_time > dt * 3.5){
-        // if(bot.direct == 0){
-        //     bot.direction = 2;
-        //     bot.direct = 2;
-        //     bot.image = bot.costumes[2]
-        // } else if(bot.direct == 1){
-        //     bot.direction = 3;
-        //     bot.direct = 3;
-        //     bot.image = bot.costumes[3]
-        // } else if(bot.direct == 2){
-        //     bot.direction = 0;
-        //     bot.direct = 0;
-        //     bot.image = bot.costumes[0]
-        // } else if(bot.direct == 3){
-        //     bot.direction = 1;
-        //     bot.direct = 1;
-        //     bot.image = bot.costumes[1]
-        // }
-
+    if(time - bot.last_centre_time > dt * 4){
         bot.passed = 0;
         bot.move_type = 0;
         bot.prev = 0;
         bot.last_centre_time = time;
+        bot.go_without = 3;
     }
-    if(bot_way.length == 0){
+    if(bot_way.length < 1){
         bot.taran = true;
+        if(bot.move_type == 0){
+            bot_way = findway(bot, tankB, map);
+            if(bot_way.length > 1){
+                if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direct = 0}
+                else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direct = 1}
+                else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direct = 2}
+                else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direct = 3}
+            } else {bot.direction = -1;}
+        } else {
+            bot_way = find_rand_way(bot, tankB, map);
+            if(bot_way.length > 1){
+                if(x1 == bot_way[1][1] && y1 > bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[0]; bot.direction = 0; bot.direct = 0}
+                else if(x1 < bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[1]; bot.direction = 1; bot.direct = 1}
+                else if(x1 == bot_way[1][1] && y1 < bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[2]; bot.direction = 2; bot.direct = 2}
+                else if(x1 > bot_way[1][1] && y1 == bot_way[1][0] && centre(bot, map.wall[y1][x1])){bot.image = bot.costumes[3]; bot.direction = 3; bot.direct = 3}
+            } else {bot.direction = -1;}
+        }
+
     }
+    return bot_way
+
 }
 
 
@@ -865,7 +886,6 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound, so
             box.last = time;
         }
         // ctx.beginPath();
-        // console.log(tankA.x, " ",tankA.sx)
         // ctx.ellipse(100, 100, 100, 100, Math.PI / 4, 0, 2 * Math.PI);
         // ctx.fillStyle = 'blue';
         // ctx.fill();
@@ -947,7 +967,21 @@ export function bulletgo(bullet, tankA, tankB, map, winner, box, time, sound, so
 
 //###########################################################################################################################################
 //###########################################################################################################################################
-
+function front(tank, x1, y1, yw, xw){
+    if(tank.direct == 0 && yw + 1 == y1){
+        return true;
+    } 
+    if(tank.direct == 1 && xw == 1 + x1){
+        return true;
+    } 
+    if(tank.direct == 2 && yw == 1 + y1){
+        return true;
+    } 
+    if(tank.direct == 3 && xw + 1 == x1){
+        return true;
+    } 
+    return false;
+}
 
 
 export function bot_shot(bot_way, tank1, map, tank, time, time0, dt){
@@ -966,22 +1000,31 @@ export function bot_shot(bot_way, tank1, map, tank, time, time0, dt){
             }
         }
     }
-    if((x1 == x2 && (tank.direction == 0 || tank.direction == 2)) || (y1 == y2 && (tank.direction == 1 || tank.direction == 3))){
+    if((Math.abs(x1 - x2) < 2 && (tank.direction == 0 || tank.direction == 2)) || (Math.abs(y1 - y2) < 2 && (tank.direction == 1 || tank.direction == 3))){
         button = true;
     }
     if(bot_way.length > 1){
-        if(map.wall[bot_way[1][0]][bot_way[1][1]].status != 3 && map.wall[bot_way[1][0]][bot_way[1][1]].is){
+    
+        if(map.wall[bot_way[1][0]][bot_way[1][1]].status != 3 && map.wall[bot_way[1][0]][bot_way[1][1]].is && front(tank, x1, y1, bot_way[1][0], bot_way[1][1])){
             button = true;
             barrier = true;
+            if(centre(tank, map.wall[y1][x1]) && map.wall[bot_way[1][0]][bot_way[1][1]].status < 2){
+                tank.direction = -1;
+            }
         }
     }
     if(button && !tank.bullets[tank.bullet_i].see && time0 < time - dt){
-        if(Math.random() > 0.5 || barrier){
+        if(Math.random() < tank.shoot_chance[tank.strong] || barrier){
             bulletset(tank);
             tank.bullet_i++;
         }
         if(tank.bullet_i == tank.bullet_max){tank.bullet_i = 0}
         time0 = time
+    }
+    if(bot_way.length > 1){
+        if(barrier == true && tank.direction == -1){
+            tank.direction = tank.direct
+        }
     }
     return time0;
 }

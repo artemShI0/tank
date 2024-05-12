@@ -226,6 +226,10 @@ export let tank1 = {
   randy: Math.floor(Math.random() * (12)),
   taran: false,
   last_centre_time: 0, 
+  strong: 0,
+  shoot_chance: [0.5, 0.6, 0.7, 0.8, 0.9, 1],
+  walk_chance: [0, 0.3, 0.5, 0.7, 0.9, 1],
+  taran_chance: [0.5, 0.6, 0.7, 0.8, 0.9, 1],
 };
 
 export let tank2 = {
@@ -256,6 +260,10 @@ export let tank2 = {
   randy: Math.floor(Math.random() * (12)),
   taran: false,
   last_centre_time: 0, 
+  strong: 0,
+  shoot_chance: [0.5, 0.6, 0.7, 0.8, 0.9, 1],
+  walk_chance: [0, 0.3, 0.5, 0.7, 0.9, 1],
+  taran_chance: [0.5, 0.6, 0.7, 0.8, 0.9, 1],
 };
 
 export let bot = {

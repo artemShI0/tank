@@ -86,6 +86,8 @@ document.onkeydown = function checkKeycode(event){
     tank2.dy = 1 * localStorage.getItem("Tspeed");
     tank1.bullet_max = 1 * localStorage.getItem("ars");
     tank2.bullet_max = 1 * localStorage.getItem("ars");
+    tank1.strong = 1 * localStorage.getItem("strong1");
+    tank2.strong = 1 * localStorage.getItem("strong2");
     let dt = localStorage.getItem("freq");
     bullet.dx = 1 * localStorage.getItem("Bspeed");
     bullet.dy = 1 * localStorage.getItem("Bspeed");
@@ -140,13 +142,12 @@ document.onkeydown = function checkKeycode(event){
     
     //########################################################################################################
     
-    console.log(map)
+  
     function render() {
         time = new Date();
         ctx.clearRect(0, 0, canvas.width, canvas.height); 
+        show_way(bot_way1, map);
         visualwalls(map);
-        move1(tank2, tank1, map, box);
-        move1(tank1, tank2, map, box);
         
         //    ctx.drawImage(brick_brown.image, 700, 500, brick_brown.width, brick_brown.height);
         //    drawCage(cage);
@@ -158,31 +159,23 @@ document.onkeydown = function checkKeycode(event){
         //    pointStatus(point, mouse);
         
         if(ub1 == 'false'){
-            appearence1(tank1, last(push1, pusheri));
-            time1 = shot(pressed["KeyQ"], tank1, time, time1, dt);
+          appearence1(tank1, last(push1, pusheri));
+          time1 = shot(pressed["KeyQ"], tank1, time, time1, dt);
         } else {
-            if(tank1.move_type == 0){
-              bot_way1 = findway(tank1, tank2, map);
-            } else {
-              bot_way1 = find_rand_way(tank1, tank1.randx, tank1.randy, map);
-            }
- //           show_way(bot_way1, map);
-            appearence_bot(tank1, bot_way1, map, time, dt);
-            time1 = bot_shot(bot_way1, tank2, map, tank1, time, time1, dt);
+          bot_way1 = appearence_bot(tank1, bot_way1, map, time, dt, tank2);
+          //          show_way(bot_way1, map);
+          time1 = bot_shot(bot_way1, tank2, map, tank1, time, time1, dt);
         }
         if(ub2 == 'false'){
-            appearence2(tank2, last(push2, pusherj));
-            time2 = shot(pressed["Space"], tank2, time, time2, dt);
+          appearence2(tank2, last(push2, pusherj));
+          time2 = shot(pressed["Space"], tank2, time, time2, dt);
         } else {
-          if(tank1.move_type == 0){
-            bot_way2 = findway(tank2, tank1, map);
-          } else {
-            bot_way2 = find_rand_way(tank2, tank2.randx, tank2.randy, map);
-          }
-  //          show_way(bot_way2, map);
-            appearence_bot(tank2, bot_way2, map, time, dt);
-            time2 = bot_shot(bot_way2, tank1, map, tank2, time, time2, dt);
+          bot_way2 = appearence_bot(tank2, bot_way2, map, time, dt, tank1);
+          //          show_way(bot_way2, map);
+          time2 = bot_shot(bot_way2, tank1, map, tank2, time, time2, dt);
         }
+        move1(tank2, tank1, map, box);
+        move1(tank1, tank2, map, box);
         ctx.drawImage(tank1.image, tank1.x, tank1.y, tank1.width, tank1.height);
         ctx.drawImage(tank2.image, tank2.x, tank2.y, tank2.width, tank2.height);
         
@@ -210,80 +203,3 @@ document.onkeydown = function checkKeycode(event){
 }
 
 
-
-
-
-
-//    ctx.drawImage(brick_brown.image, 700, 500, brick_brown.width, brick_brown.height);
-//    drawCage(cage);
-////      drawRect(rect);
-//    drawPoint(point);
-//    drawOut(out);
-//   ctx.drawImage(box.image_sh, tank1.x + tank1.width / 2 - box.width_sh / 2, tank1.y + tank1.height / 2 - box.height_sh / 2, box.width_sh, box.height_sh)
-//    ctx.drawImage(kust.image, kust.x, kust.y, kust.width, kust.height);
-//    pointStatus(point, mouse);
-
-
-
-
-/*
-      time = new Date();
-      ctx.clearRect(0, 0, canvas.width, canvas.height); 
-      
-      //    ctx.drawImage(brick_brown.image, 700, 500, brick_brown.width, brick_brown.height);
-      //    drawCage(cage);
-      ////      drawRect(rect);
-      //    drawPoint(point);
-      //    drawOut(out);
-      visualwalls(map);
-    
-      
-      //   ctx.drawImage(box.image_sh, tank1.x + tank1.width / 2 - box.width_sh / 2, tank1.y + tank1.height / 2 - box.height_sh / 2, box.width_sh, box.height_sh)
-      //    ctx.drawImage(kust.image, kust.x, kust.y, kust.width, kust.height);
-      //    pointStatus(point, mouse);
-      
-      if(use_bot == "false"){
-        ctx.drawImage(tank1.image, tank1.x, tank1.y, tank1.width, tank1.height);
-        ctx.drawImage(tank2.image, tank2.x, tank2.y, tank2.width, tank2.height);
-        appearence1(tank1, last(push1, pusheri));
-        appearence2(tank2, last(push2, pusherj));
-        move1(tank1, tank2, map, box);
-        move1(tank2, tank1, map, box);
-        time1 = shot(pressed["KeyQ"], tank1, time, time1, dt);
-        time2 = shot(pressed["Space"], tank2, time, time2, dt);
-        move_box(box, time, map, tank1, tank2);
-        bulletflight(tank1, tank2, map, winner, box, time, sound);
-        bulletflight(tank2, tank1, map, winner, box, time, sound);
-        document.querySelector(".outBlue").innerHTML = tank1.points;
-        document.querySelector(".outRed").innerHTML = tank2.points;
-      } else {
-        bot_way = findway(bot, tank2, map);
-        show_way(bot_way, map);
-        ctx.drawImage(tank2.image, tank2.x, tank2.y, tank2.width, tank2.height);
-        ctx.drawImage(bot.image, bot.x, bot.y, bot.width, bot.height);
-        appearence2(tank2, last(push2, pusherj));
-        appearence_bot(bot, bot_way, map, time, dt);
-        move1(tank2, bot, map, box);
-        move1(bot, tank2, map, box);
-        time1 = shot(pressed["Space"], tank2, time, time1, dt);
-        time2 = bot_shot(bot_way, tank2, map, bot, time, time2, dt);
-        move_box(box, time, map, tank2, bot);
-        bulletflight(tank2, bot, map, winner, box, time, sound);
-        bulletflight(bot, tank2, map, winner, box, time, sound);
-        document.querySelector(".outRed").innerHTML = tank2.points;
-        document.querySelector(".outBlue").innerHTML = bot.points;
-      }
-    
-      box.see ? ctx.drawImage(box.image, box.x, box.y, box.width, box.height) : 0;
-      //    move2(tank2, pressed, brick_white, a, b, c, d);
-      //    inside(tank1, brick_white, a, b, c, d);
-      //    inside(tank2, brick_white, a, b, c, d);
-      ////    function small(){rect.height = 0; rect.width = 0;}
-      ////    if(winner.who = 'red'){rect.height = 100; rect.width = 100; setTimeout(small, 5000);}
-      ////    if(winner.who = 'blue'){rect.height = 100; rect.width = 100; setTimeout(small, 5000);}
-    
-      window.requestAnimationFrame(render);
-    }
-    window.requestAnimationFrame(render);
-  }
-*/
