@@ -146,7 +146,7 @@ document.onkeydown = function checkKeycode(event){
     function render() {
         time = new Date();
         ctx.clearRect(0, 0, canvas.width, canvas.height); 
-        show_way(bot_way1, map);
+ //       show_way(bot_way1, map);
         visualwalls(map);
         
         //    ctx.drawImage(brick_brown.image, 700, 500, brick_brown.width, brick_brown.height);
