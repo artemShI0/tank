@@ -171,7 +171,7 @@ document.onkeydown = function checkKeycode(event){
           time2 = shot(pressed["Space"], tank2, time, time2, dt);
         } else {
           bot_way2 = appearence_bot(tank2, bot_way2, map, time, dt, tank1);
-          //          show_way(bot_way2, map);
+                    show_way(bot_way2, map);
           time2 = bot_shot(bot_way2, tank1, map, tank2, time, time2, dt);
         }
         move1(tank2, tank1, map, box);
